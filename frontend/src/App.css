@@ -1,0 +1,309 @@
+body {
+  background-color: #F8F8F8;
+  font-family: 'Quicksand';
+}
+
+.Loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.8); 
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 9999; 
+}.Loading-container img {
+  width: 20%; 
+  height: auto;
+}
+.sign-up-process1 {
+  float: left;
+  width: 80%;
+  text-align: center;
+  background-color: white;
+  border-radius: 16px;
+  box-shadow: rgba(0,0,0,0.35) 0px 5px 15px;
+  position: absolute;
+  left: 10%;
+  top: 15%;
+  font-family: 'quicksand';
+}
+
+.sign-up-process {
+  float: left;
+  width: 80%;
+  text-align: center;
+  background-color: white;
+  border-radius: 16px;
+  box-shadow: rgba(0,0,0,0.35) 0px 5px 15px;
+  position: absolute;
+  left: 10%;
+  top: 2%;
+  font-family: 'quicksand';
+}.Process-Left {
+  float: left;
+  width: 50%;
+}.sign-up-process h2 {
+  font-weight: 900;
+  font-size: 40px;
+  text-align: left;
+  margin-left:1em ;
+  margin-top: 0.5em;
+}.sign-up-process1 h2 {
+  font-weight: 900;
+  font-size: 40px;
+  text-align: left;
+  margin-left:1em ;
+  margin-top: 0.5em;
+}
+form.Signup-form {
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  padding: 20px;
+  align-items: center;
+}label.signup-label {
+  display: flex;
+  flex-direction: column;
+  text-align: initial;
+  margin-bottom: 15px;
+}input.signup-input {
+  padding: 8px;
+  margin-top: 5px;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  transition: border-bottom-width 0.3s;
+  width:120%;
+}input.signup-input:hover {
+  border-bottom-color: black;
+}input.signup-input:focus {
+  border-bottom-color: black;
+  outline: none;
+}input[type="checkbox"] {
+  float: left;
+  width: 10%;
+  cursor: pointer;
+  margin-top: 1em;
+}.text-danger {
+  float: left;
+  width: 65%;
+  font-weight: 800;
+}
+label.signup-label1 {
+  float: left;
+  text-align: initial;
+  margin-left: 5em;
+  padding: 1em;
+}button.signup-button {
+  width: 20%;
+  padding: 1em;
+  cursor: pointer;
+  border-radius: 16px;
+  box-shadow: rgba(0,0,0,0.35)0px 5px 15px;
+  border: none;
+  margin-top: 1em;
+  background-color: #136DCD;
+  font-family: quicksand;
+  color: white;
+}p.image-bottom-para:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}label.signup-label1 span {
+  text-decoration: underline;
+  cursor: pointer;
+}label.signup-label2 {
+  width: 30%;
+  cursor:pointer;
+}label.signup-label2 p {
+  text-align: justify;
+  position: relative;
+  bottom: 0.5em;
+}p.image-bottom-para1 {
+  float: right;
+  width: 50%;
+  cursor: pointer;
+}p.image-bottom-para1:hover {
+ text-decoration: underline;
+}.Other-Login {
+  margin: 2em;
+}img.soical-i {
+  margin: 5px;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}img.soical-i:hover {
+  transform: scale(1.2);
+}a {
+  text-decoration: none;
+  color: black;
+}.alert-success {
+  background-color: #dff0d8;
+  border: 1px solid #3c763d;
+  color: #3c763d;
+  padding: 10px;
+  margin-top: 10px;
+}.alert-error {
+  background-color: #f2dede;
+  border: 1px solid #a94442;
+  color: #a94442;
+  padding: 10px;
+  margin-top: 10px;
+}
+.Card {
+  float: left;
+  width: 93%;
+  padding: 1em;
+  border-radius: 16px;
+  box-shadow: rgba(0,0,0,0.35) 0px 5px 15px;
+  margin-left: 2em;
+  background-color: white;
+  margin-top: 3em;
+  transition: transform 0.3s, box-shadow 0.3s;
+}.Content-h2, .Content-h3 {
+  text-align: center;
+}
+.Whole.CArd {
+  float: left;
+  width: 100%;
+  margin-top: 3em;
+}input.Term-Search {
+  position: absolute;
+  left: 30%;
+  width: 40%;
+  margin: 1em;
+  padding: 1em;
+  font-family: quicksand;
+  font-weight: 600;
+  border-radius: 20px;
+  cursor: pointer;
+}.Card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}p.error-Message {
+  padding: 1em;
+  border-radius: 16px;
+  box-shadow: rgba(0,0,0,0.35) 0px 5px 15px;
+  font-weight: 600;
+  margin-bottom: -1em;
+}img.Content-img {
+  width: 40%;
+  position: relative;
+  left: 30%;
+  padding: 1em;
+  border-radius: 30px;
+}p.Content-p {
+  line-height: 2em;
+}p.Content-p {
+  line-height: 2em;
+}.text-danger {
+  color: red;
+  position: absolute;
+  left: 19%;
+  top: 15%;
+}button.emload {
+  background-color: #1376CD;
+  font-family: 'Quicksand';
+  font-weight: 400;
+  margin: 4em 1em;
+  color: white;
+  cursor: pointer;
+  box-shadow: rgba(0,0,0,0.35)0px 5px 15px;
+  transition: transform 0.3s ease;
+}
+button.emload:hover {
+  transform: scale(1.1);
+}
+li { 
+  transition: transform 0.3s ease;
+}li:hover {
+  background-color: white;
+  cursor: pointer;
+  border-radius: 16px;
+  transform: scale(1.01);
+}a.nav-link.text-truncate {
+  color: black;
+  font-family: 'Quicksand';
+}.adjust {
+  font-family: 'Quicksand';
+  float: left;
+  width: 100%;
+}
+.procedure {
+  width: 75%;
+  font-family: 'Quicksand';
+  margin-top: 2em;
+  text-align: justify;
+  position: absolute;
+  left: 12%;
+}form.row.g-3.w-50 {
+  box-shadow: rgba(0,0,0,0.35)0px 5px 15px;
+  border-radius: 16px;
+  padding: 1em;
+}.emloyee-list {
+    float: left;
+    width: 80%;
+    margin-top: 2em;
+    margin-left: 8em;
+    font-family: 'Quicksand';
+    border: none;
+    border-radius: 16px;
+    text-align: start;
+    box-shadow: rgba(0,0,0,0.35) 0px 5px 15px;
+}.emloyee-list h3 {
+  text-align: center;
+  padding: 1em;
+  font-weight: 300;
+  font-size: 32px;
+}
+button.btnn {
+  background-color: aliceblue;
+  margin: 0em 1em;
+}button.btnn1 {
+  background-color: aliceblue;
+  margin: 0em 1em;
+}button.btnn1 {
+  background-color: antiquewhite;
+}
+thead{
+  text-align: center;
+}.editimg{
+  width: 100%;
+  height: 10vh;
+  border-radius: 50%;
+}.profile-content {
+
+  padding: 2em;
+  border: none;
+  box-shadow: rgba(0,0,0,0.35)0px 5px 15px;
+  border-radius: 16px;
+}.subtitle{
+  font-size: 20px;
+}li.nav-item {
+  margin: 0em 1em;
+}nav.navbar.navbar-expand-lg.navbar-light {
+  background-color: #f5f5f5;
+}.left-profile {
+  float: left;
+  width: 50%;
+  position: absolute;
+  left: 25%;
+  top: 30%;
+}.Right-profile {
+  float: right;
+  width: 50%;
+  margin-top: 12em;
+}.Edit-Employee-Option{
+  background-color: #136DCD;
+  color: white;
+  transition: transform 0.3s ease;
+}.Edit-Employee-Option:hover{
+  transform: scale(1.03);
+}.nav-item1{
+  color: #3c763d;
+  position: relative;
+  left: 130%;
+  margin-right: 10em;
+}
