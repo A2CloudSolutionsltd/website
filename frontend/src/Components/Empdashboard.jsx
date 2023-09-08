@@ -1,15 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import backgroundImage from '/public/assets/images/bgg.avif';
 
 function Empdashboard() {
-  const divStyle = {
-    backgroundImage: `url(${backgroundImage})`,
-
-    backgroundSize: 'cover',
-    backgroundRepeat: 'no-repeat',
-  };
   const navigate = useNavigate();
   const { email } = useParams();
   const [employee, setEmployee] = useState({});
@@ -51,34 +44,56 @@ function Empdashboard() {
     <div>
 
       <div>
-      <nav className="navbar navbar-expand-lg navbar-light ">
+     
+      <nav className="navbar navbar-expand-lg navbar-light" >
+
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav mr-auto">
+           
+            <li className="nav-item">
+                <Link className="nav-link">
+                  Feed
+                </Link>
+              </li> 
+
               <li className="nav-item">
                 <Link className="nav-link" to={`/Employee-dashboard/${email}`}>
-                <i className="fs-4 bi-speedometer2"></i> Dashboard
+                 Dashboard
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link" to="/TaskandProject">
+                  Task & Projects
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link">
+                  Events
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link">
+                  Calendar
                 </Link>
               </li>
               <li className="nav-item">
                 <Link className="nav-link" to={`/Employee-profile/${email}`}>
-                <i className="fs-4 bi-person"></i>  Profile
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to={`/Employee-profile/${email}`}>
-                <i className="fs-4 bi-book"></i>  Task
+                 Profile
                 </Link>
               </li>
               <li className="nav-item1">
                 <button className="nav-link" onClick={handleLogout}>
-                <i className="fs-4 bi-power"></i> Logout
+                 Logout
                 </button>
               </li>
             </ul>
           </div>
         </nav>
-        <div style={divStyle}>
-          <h1>Welcome, {employee.name} <span className='subtitle'>{employee.role}</span></h1>
+        <div>
+          <div className='rounded-profile'>
+          <img src={`http://localhost:8081/images/`+employee.image} alt='Upload Image' className='nav-image'/> 
+          </div>
+          <h2>{employee.name} <span className='subtitle'>({employee.role})</span></h2>
         </div>
       </div>
     </div>

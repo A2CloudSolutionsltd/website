@@ -34,24 +34,39 @@ function EmpProfile() {
                 <nav className="navbar navbar-expand-lg navbar-light" >
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav mr-auto">
+            <li className="nav-item">
+                <Link className="nav-link">
+                  Feed
+                </Link>
+              </li> 
               <li className="nav-item">
                 <Link className="nav-link" to={`/Employee-dashboard/${email}`}>
-                <i className="fs-4 bi-speedometer2"></i> Dashboard
+                 Dashboard
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link" to="/TaskandProject">
+                  Task & Projects
+                </Link>
+              </li>
+              <li className="nav-item">
+              </li>
+                <Link className="nav-link">
+                  Events
+                </Link>
+              <li className="nav-item">
+                <Link className="nav-link">
+                  Calendar
                 </Link>
               </li>
               <li className="nav-item">
                 <Link className="nav-link" to={`/Employee-profile/${email}`}>
-                <i className="fs-4 bi-person"></i>  Profile
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to={`/Employee-profile/${email}`}>
-                <i className="fs-4 bi-book"></i>  Task
+                 Profile
                 </Link>
               </li>
               <li className="nav-item1">
                 <button className="nav-link" onClick={handleLogout}>
-                <i className="fs-4 bi-power"></i> Logout
+                 Logout
                 </button>
               </li>
             </ul>
@@ -59,29 +74,35 @@ function EmpProfile() {
         </nav>
                     <div className='bg-content'>
 
-                            <div>
+                            <div className='overall-profile'>
+                              <div className='pro-prfile'>
+                              <div className='border-shadow1'>
+                              <img src={`http://localhost:8081/images/`+employee.image} alt='Upload Image' className='pro-picbyeemployee'/>
+                              </div>
+                              </div>
+                              {/* <img src={`http://localhost:8081/images/`+employee.image} alt="" className='empImg'/> */}
                         
                                         <div className='left-profile'>
                                             <h1>Profile,</h1>
                                             <label>Name:</label>
-                                            <p>{employee.name}</p>
+                                            <strong> <p>{employee.name}</p></strong>
                                             <label>Address:</label>
-                                            <p>{employee.address}</p>
+                                           <strong> <p>{employee.address}</p></strong>
                                             <label>Email:</label>
-                                            <p>{employee.email}</p>
+                                            <strong> <p>{employee.email}</p></strong>
                                             <label>Title:</label>
-                                            <p>{employee.role}</p>
+                                            <strong>  <p>{employee.role}</p></strong>
 
                                         </div>
                                         <div className='Right-profile'>
                                              <label>DOB:</label>
-                                             <p>{employee.dob}</p>
+                                             <strong> <p>{employee.dob}</p></strong>
                                              <label>Mobile Number :</label>
-                                             <p>{employee.mobile}</p>
+                                             <strong>  <p>{employee.mobile}</p></strong>
                                              <label>Highest Education:</label>
-                                             <p>{employee.education}</p>
+                                             <strong> <p>{employee.education}</p></strong>
 
-                                           <Link to={"/EmployeeEditOption/" + encodeURIComponent(employee.email)} ><button className='Edit-Employee-Option'> <i className="fs-4 bi-pencil-square"></i>Edit</button></Link>  
+                                           <Link to={"/EmployeeEditOption/"+ encodeURIComponent(employee.email)} ><button className='Edit-Employee-Option'> <i className="fs-4 bi-pencil-square"></i></button></Link>  
 
                                         </div>
 

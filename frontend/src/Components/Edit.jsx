@@ -17,8 +17,8 @@ function Edit() {
       const navigate = useNavigate(); 
     
       useEffect(() => {
-        const encodedEmail = encodeURIComponent(params.email);
-        axios.get('http://localhost:8081/get/' + encodedEmail)
+        const encodedName = encodeURIComponent(params.name);
+        axios.get('http://localhost:8081/get/' + encodedName)
           .then(res => {
             setData({
               ...data,
@@ -30,7 +30,7 @@ function Edit() {
             });
           })
           .catch(err => console.log(err));
-      }, [params.email]);
+      }, [params.name]);
     
       const handleSubmit = (event) => {
         event.preventDefault();

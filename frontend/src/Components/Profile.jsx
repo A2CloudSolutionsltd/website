@@ -41,7 +41,7 @@ function Profile() {
             </div>
             <div class="offcanvas-body px-0">
               <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-start" id="menu">
-                <li class="nav-item">
+                <li>
                   <Link to="/dashboard" class="nav-link text-truncate">
                     <i className="fs-4 bi-speedometer2"></i><span class="ms-1 d-none d-sm-inline">Dashboard</span>
                   </Link>

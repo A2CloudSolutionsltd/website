@@ -3,42 +3,74 @@ import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 function EditEmployee() {
-    const [data, setData] = useState({
-        dob: '',
-        mobile: '',
-        education: ''
-    });
     const params = useParams();
+    const [data, setData] = useState({
+      dob: '',
+      mobile: '',
+      education: '',
+    });
+  
     useEffect(() => {
-        const encodedEmail = encodeURIComponent(params.email);
-        axios.get('http://localhost:8081/get/' + encodedEmail)
-          .then(res => {
-            setData({
-              ...data,
-              dob: res.data.Result[0].dob,
-              mobile: res.data.Result[0].mobile,
-              education: res.data.Result[0].education,
-            });
-          })
-          .catch(err => console.log(err));
-      }, [params.email]);
+      const fetchData = async () => {
+        try {
+          const encodedEmail = encodeURIComponent(params.email);
+          const response = await axios.get(`http://localhost:8081/get/${encodedEmail}`);
+          const result = response.data.Result[0];
+  
+          setData({
+            dob: result.dob,
+            mobile: result.mobile,
+            image: result.image,
+            education: result.education,
+          });
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      };
+  
+      if (params.email) {
+        fetchData();
+      }
+    }, [params.email]);
 
     const navigate = useNavigate();
+    // const handleSubmit = (event) => {
+    //     const formdata = new FormData();
+    //     formdata.append("image", data.image);
+    //     event.preventDefault();
+    //     const encodedEmail = encodeURIComponent(params.email);
+    //     axios.put('http://localhost:8081/updateEmployee/',formdata + encodedEmail, {
+    //         dob: data.dob,
+    //         mobile: data.mobile,
+    //         education: data.education,
+    //         image:data.image
+          
+    //     })
+    //         .then(res => {
+    //             if (res.data.Status === "Success") {
+    //                 navigate('/Employee-dashboard/'+encodedEmail);
+    //             }
+    //         })
+    //         .catch(err => console.log(err));
+    // };
     const handleSubmit = (event) => {
         event.preventDefault();
+        const formdata = new FormData();
+        formdata.append("image", data.image);
+        formdata.append("dob", data.dob);
+        formdata.append("mobile", data.mobile);
+        formdata.append("education", data.education);
+        
         const encodedEmail = encodeURIComponent(params.email);
-        axios.put('http://localhost:8081/updateEmployee/' + encodedEmail, {
-            dob: data.dob,
-            mobile: data.mobile,
-            education: data.education
-        })
-            .then(res => {
-                if (res.data.Status === "Success") {
-                    navigate('/Employee-dashboard/'+encodedEmail);
-                }
-            })
-            .catch(err => console.log(err));
-    };
+        axios.put(`http://localhost:8081/updateEmployee/${encodedEmail}`, formdata)
+          .then(res => {
+            if (res.data.Status === "Success") {
+              navigate(`/Employee-dashboard/${encodedEmail}`);
+            }
+          })
+          .catch(err => console.log(err));
+      };
+      
 
 
     return (
@@ -50,9 +82,6 @@ function EditEmployee() {
                         <div className="row">
                             <div className="col min-vh-100 py-3">
 
-                                <button className="btn float-end" data-bs-toggle="offcanvas" data-bs-target="#offcanvas" role="button">
-                                    <i className="bi bi-arrow-right-square-fill fs-3" data-bs-toggle="offcanvas" data-bs-target="#offcanvas"></i>
-                                </button>
                                 <div className='adjust' >
 
                                     <div className='d-flex flex-column align-items-center pt-4'>
@@ -73,7 +102,7 @@ function EditEmployee() {
                                             </p>
                                             <div className="col-12">
                                                 <label for="inputName" className="form-label">Date of Birth</label>
-                                                <input type="text" className="form-control" id="inputName" placeholder='01/01/1111' autoComplete='off'
+                                                <input type="date" className="form-control" id="inputName" placeholder='01/01/1111' autoComplete='off'
                                                     onChange={e => setData({ ...data, dob: e.target.value })} value={data.name} name='dob' required />
                                             </div>
                                             <div className="col-12">
@@ -85,6 +114,11 @@ function EditEmployee() {
                                                 <label for="inputAddress" className="form-label">Education</label>
                                                 <input type="text" className="form-control" id="inputAddress" placeholder="Highest Education" autoComplete='off'
                                                     onChange={e => setData({ ...data, education: e.target.value })} value={data.role} name='education' required />
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label" for="inputGroupFile01">Select Image</label>
+                                                <input type="file" class="form-control" id="inputGroupFile01"
+                                                    onChange={e => setData({ ...data, image: e.target.files[0] })} />
                                             </div>
                                             <div className="col-12">
                                                 <button type="submit" className="btn btn-primary">Update</button>

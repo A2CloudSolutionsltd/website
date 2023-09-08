@@ -4,6 +4,8 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import path from "path";
+import multer from "multer";
 
 const app = express();
 app.use(cors(
@@ -24,6 +26,18 @@ const con = mysql.createConnection({
     database: "signup"
 });
 
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'public/images')
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.fieldname + "_" + Date.now() + path.extname(file.originalname));
+  }
+});
+
+const upload = multer({
+  storage: storage
+});
 con.connect(function (err) {
     if (err) {
         console.log("Error in connection");
@@ -121,19 +135,35 @@ app.get('/employee/:email', (req,res) =>{
     })
 })
 
-app.put('/update/:email', (req, res) => {
-    const email = req.params.email;
-    const newRole = req.body.role; 
-    const newName = req.body.name; 
-    const newAddress= req.body.address; 
-    const newPassword = req.body.password; 
-  
-    const sql = "UPDATE employee SET role = ?, name = ?, address = ?, password = ? WHERE email = ?";
-    con.query(sql, [newRole, newName, newAddress, newPassword, email], (err, result) => {
-      if (err) return res.json({ Error: "Update employee error in SQL" });
-      return res.json({ Status: "Success" });
-    });
+app.put('/updateEmployee/:email', upload.single('image'), (req, res) => {
+  const email = req.params.email;
+  const newDob = req.body.dob;
+  const newMobile = req.body.mobile;
+  const newEducation = req.body.education;
+  const image = req.file.filename;
+
+  const sql = "UPDATE employee SET dob = ?, mobile = ?, education = ?, image = ? WHERE email = ?";
+  con.query(sql, [newDob, newMobile, newEducation, image, email], (err, result) => {
+    if (err) return res.json({ Error: "Update employee error in SQL" });
+    return res.json({ Status: "Success" });
   });
+});
+
+// app.put('/update/:email',upload.single('image'), (req, res) => {
+//     const email = req.params.email;
+//     const newRole = req.body.role; 
+//     const newName = req.body.name; 
+//     const newAddress= req.body.address; 
+//     const newPassword = req.body.password; 
+//     const image =    req.file.filename
+  
+  
+//     const sql = "UPDATE employee SET role = ?, name = ?, address = ?, password = ? , image = ? WHERE email = ?";
+//     con.query(sql, [newRole, newName, newAddress, newPassword,image , email], (err, result) => {
+//       if (err) return res.json({ Error: "Update employee error in SQL" });
+//       return res.json({ Status: "Success" });
+//     });
+//   });
 
   app.put('/updateEmployee/:email', (req, res) => {
     const email = req.params.email;
