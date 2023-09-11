@@ -17,7 +17,6 @@ import Empdashboard from './Components/Empdashboard';
 import EmpProfile from './Components/EmpProfile';
 import EditEmployee from './Components/EditEmployee';
 import EmployeeTask from './Components/EmployeeTask';
-import Globaladdress from './Components/Globaladdress';
 
 function App() {
   
@@ -37,7 +36,6 @@ function App() {
       <Route path="/Employee-SignUp" element={<StartEmployeeDB />} />
       <Route path="/Employee-dashboard/:email" element={<Empdashboard />} />
       <Route path='/EmployeeEditOption/:email' element={<EditEmployee />} />
-      <Route path='/globalsearch' element={<Globaladdress />} />
     </Routes>
     </Router>
 

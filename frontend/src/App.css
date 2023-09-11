@@ -1,6 +1,6 @@
 body {
-  background-color: #F8F8F8;
-  font-family: 'Quicksand';
+  background-color: #f8f8f8;
+  font-family: "Quicksand";
 }
 
 .Loading-container {
@@ -8,14 +8,15 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: rgba(255, 255, 255, 0.8); 
+  background-color: rgba(255, 255, 255, 0.8);
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 9999; 
-}.Loading-container img {
-  width: 20%; 
+  z-index: 9999;
+}
+.Loading-container img {
+  width: 20%;
   height: auto;
 }
 .sign-up-process1 {
@@ -24,11 +25,11 @@ body {
   text-align: center;
   background-color: white;
   border-radius: 16px;
-  box-shadow: rgba(0,0,0,0.35) 0px 5px 15px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   position: absolute;
   left: 10%;
   top: 15%;
-  font-family: 'quicksand';
+  font-family: "quicksand";
 }
 
 .sign-up-process {
@@ -37,25 +38,28 @@ body {
   text-align: center;
   background-color: white;
   border-radius: 16px;
-  box-shadow: rgba(0,0,0,0.35) 0px 5px 15px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   position: absolute;
   left: 10%;
   top: 2%;
-  font-family: 'quicksand';
-}.Process-Left {
+  font-family: "quicksand";
+}
+.Process-Left {
   float: left;
   width: 50%;
-}.sign-up-process h2 {
+}
+.sign-up-process h2 {
   font-weight: 900;
   font-size: 40px;
   text-align: left;
-  margin-left:1em ;
+  margin-left: 1em;
   margin-top: 0.5em;
-}.sign-up-process1 h2 {
+}
+.sign-up-process1 h2 {
   font-weight: 900;
   font-size: 40px;
   text-align: left;
-  margin-left:1em ;
+  margin-left: 1em;
   margin-top: 0.5em;
 }
 form.Signup-form {
@@ -64,29 +68,35 @@ form.Signup-form {
   margin: 0 auto;
   padding: 20px;
   align-items: center;
-}label.signup-label {
+}
+label.signup-label {
   display: flex;
   flex-direction: column;
   text-align: initial;
   margin-bottom: 15px;
-}input.signup-input {
+}
+input.signup-input {
   padding: 8px;
   margin-top: 5px;
   border: none;
   border-bottom: 1px solid #ccc;
   transition: border-bottom-width 0.3s;
-  width:120%;
-}input.signup-input:hover {
+  width: 120%;
+}
+input.signup-input:hover {
   border-bottom-color: black;
-}input.signup-input:focus {
+}
+input.signup-input:focus {
   border-bottom-color: black;
   outline: none;
-}input[type="checkbox"] {
+}
+input[type="checkbox"] {
   float: left;
   width: 10%;
   cursor: pointer;
   margin-top: 1em;
-}.text-danger {
+}
+.text-danger {
   float: left;
   width: 65%;
   font-weight: 800;
@@ -96,56 +106,69 @@ label.signup-label1 {
   text-align: initial;
   margin-left: 5em;
   padding: 1em;
-}button.signup-button {
+}
+button.signup-button {
   width: 20%;
   padding: 1em;
   cursor: pointer;
   border-radius: 16px;
-  box-shadow: rgba(0,0,0,0.35)0px 5px 15px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   border: none;
   margin-top: 1em;
-  background-color: #136DCD;
+  background-color: #136dcd;
   font-family: quicksand;
   color: white;
-}p.image-bottom-para:hover {
+}
+p.image-bottom-para:hover {
   text-decoration: underline;
   cursor: pointer;
-}label.signup-label1 span {
+}
+label.signup-label1 span {
   text-decoration: underline;
   cursor: pointer;
-}label.signup-label2 {
+}
+label.signup-label2 {
   width: 30%;
-  cursor:pointer;
-}label.signup-label2 p {
+  cursor: pointer;
+}
+label.signup-label2 p {
   text-align: justify;
   position: relative;
   bottom: 0.5em;
-}p.image-bottom-para1 {
+}
+p.image-bottom-para1 {
   float: right;
   width: 50%;
   cursor: pointer;
-}p.image-bottom-para1:hover {
- text-decoration: underline;
-}.Other-Login {
+}
+p.image-bottom-para1:hover {
+  text-decoration: underline;
+}
+.Other-Login {
   margin: 2em;
-}img.soical-i {
+}
+img.soical-i {
   margin: 5px;
   width: 40px;
   height: 40px;
   cursor: pointer;
   transition: transform 0.3s ease;
-}img.soical-i:hover {
+}
+img.soical-i:hover {
   transform: scale(1.2);
-}a {
+}
+a {
   text-decoration: none;
   color: black;
-}.alert-success {
+}
+.alert-success {
   background-color: #dff0d8;
   border: 1px solid #3c763d;
   color: #3c763d;
   padding: 10px;
   margin-top: 10px;
-}.alert-error {
+}
+.alert-error {
   background-color: #f2dede;
   border: 1px solid #a94442;
   color: #a94442;
@@ -157,19 +180,22 @@ label.signup-label1 {
   width: 93%;
   padding: 1em;
   border-radius: 16px;
-  box-shadow: rgba(0,0,0,0.35) 0px 5px 15px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   margin-left: 2em;
   background-color: white;
   margin-top: 3em;
   transition: transform 0.3s, box-shadow 0.3s;
-}.Content-h2, .Content-h3 {
+}
+.Content-h2,
+.Content-h3 {
   text-align: center;
 }
 .Whole.CArd {
   float: left;
   width: 100%;
   margin-top: 3em;
-}input.Term-Search {
+}
+input.Term-Search {
   position: absolute;
   left: 30%;
   width: 40%;
@@ -179,74 +205,87 @@ label.signup-label1 {
   font-weight: 600;
   border-radius: 20px;
   cursor: pointer;
-}.Card:hover {
+}
+.Card:hover {
   transform: scale(1.03);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}p.error-Message {
+}
+p.error-Message {
   padding: 1em;
   border-radius: 16px;
-  box-shadow: rgba(0,0,0,0.35) 0px 5px 15px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   font-weight: 600;
   margin-bottom: -1em;
-}img.Content-img {
+}
+img.Content-img {
   width: 40%;
   position: relative;
   left: 30%;
   padding: 1em;
   border-radius: 30px;
-}p.Content-p {
+}
+p.Content-p {
   line-height: 2em;
-}p.Content-p {
+}
+p.Content-p {
   line-height: 2em;
-}.text-danger {
+}
+.text-danger {
   color: red;
   position: absolute;
   left: 19%;
   top: 15%;
-}button.emload {
-  background-color: #1376CD;
-  font-family: 'Quicksand';
+}
+button.emload {
+  background-color: #1376cd;
+  font-family: "Quicksand";
   font-weight: 400;
   margin: 4em 1em;
   color: white;
   cursor: pointer;
-  box-shadow: rgba(0,0,0,0.35)0px 5px 15px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   transition: transform 0.3s ease;
 }
 button.emload:hover {
   transform: scale(1.1);
 }
-li { 
+li {
   transition: transform 0.3s ease;
-}li:hover {
+}
+li:hover {
   cursor: pointer;
   border-radius: 16px;
   transform: scale(1.03);
-}a.nav-link.text-truncate {
+}
+a.nav-link.text-truncate {
   color: black;
-  font-family: 'Quicksand';
-}.adjust {
-  font-family: 'Quicksand';
+  font-family: "Quicksand";
+}
+.adjust {
+  font-family: "Quicksand";
   float: left;
   width: 100%;
 }
 .procedure {
   width: 75%;
-  font-family: 'Quicksand';
+  font-family: "Quicksand";
   margin-top: 2em;
   text-align: justify;
   position: absolute;
   left: 12%;
-}form.row.g-3.w-50 {
-  box-shadow: rgba(0,0,0,0.35)0px 5px 15px;
+}
+form.row.g-3.w-50 {
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   border-radius: 16px;
   padding: 1em;
-  background-image: linear-gradient(to bottom right, #ABDCFF,#e2d1c3);
-}.emloyee-list {
-    float: left;
-    width: 100%;
-   background-color: aliceblue;
-}.emloyee-list h3 {
+  background-image: linear-gradient(to bottom right, #abdcff, #e2d1c3);
+}
+.emloyee-list {
+  float: left;
+  width: 100%;
+  background-color: aliceblue;
+}
+.emloyee-list h3 {
   text-align: center;
   padding: 1em;
   font-weight: bolder;
@@ -255,110 +294,127 @@ li {
 button.btnn {
   background-color: aliceblue;
   margin: 0em 1em;
-}button.btnn1 {
+}
+button.btnn1 {
   background-color: aliceblue;
   margin: 0em 1em;
-}button.btnn1 {
+}
+button.btnn1 {
   background-color: antiquewhite;
 }
-thead{
+thead {
   text-align: center;
-}.editimg{
+}
+.editimg {
   width: 100%;
   height: 10vh;
   border-radius: 50%;
-}.profile-content {
-
+}
+.profile-content {
   padding: 2em;
   border: none;
-  box-shadow: rgba(0,0,0,0.35)0px 5px 15px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   border-radius: 16px;
-}.subtitle{
+}
+.subtitle {
   font-size: 20px;
-}nav.navbar.navbar-expand-lg.navbar-light {
+}
+nav.navbar.navbar-expand-lg.navbar-light {
   background-color: #f5f5f5;
-}.left-profile {
+}
+.left-profile {
   float: left;
   width: 33%;
-
 }
-.d-flex.flex-column.align-items-center.pt-4{
+.d-flex.flex-column.align-items-center.pt-4 {
   background-image: url(/assets/images/bg-image-3.jpg);
- background-size: 100% 100%;
- background-repeat: no-repeat;
-
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
 }
 
 .backgb {
- background-color: aliceblue;
+  background-color: aliceblue;
 }
-.pro-prfile{
+.pro-prfile {
   float: left;
   width: 33%;
 }
 .Right-profile {
   float: right;
   width: 33%;
-  margin-top:4em ;
-
-}.Edit-Employee-Option{
-  background-color: #136DCD;
+  margin-top: 4em;
+}
+.Edit-Employee-Option {
+  background-color: #136dcd;
   color: white;
   transition: transform 0.3s ease;
-}.Edit-Employee-Option:hover{
+}
+.Edit-Employee-Option:hover {
   transform: scale(1.03);
-}.nav-item1{
+}
+.nav-item1 {
   color: #3c763d;
   position: relative;
   left: 45%;
   font-weight: bolder;
-}.Task1-part {
+}
+.Task1-part {
   float: left;
   width: 100%;
   margin-top: 2em;
-}.leftpart1 {
+}
+.leftpart1 {
   float: left;
   width: 50%;
-}form.task-form {
+}
+form.task-form {
   text-align: initial;
   position: absolute;
   left: 20%;
   top: 30%;
-}.rightpart1 {
+}
+.rightpart1 {
   float: right;
   width: 50%;
-}img.proimage {
+}
+img.proimage {
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: center center;
-}.Task1-part p {
+}
+.Task1-part p {
   width: 90%;
   margin-left: 5em;
   line-height: 1.8em;
-}.Task1-part h2{
+}
+.Task1-part h2 {
   margin-left: 1em;
-}.centerpartimage{
+}
+.centerpartimage {
   border-radius: 16px;
   width: 50%;
 }
 /* #e2d1c3 */
 .ListingAllEmployee {
-  background-image: linear-gradient(to bottom right, #ABDCFF,#e2d1c3);
+  background-image: linear-gradient(to bottom right, #abdcff, #e2d1c3);
   float: left;
   width: 70%;
   border-radius: 16px;
   padding: 1em;
   margin: 1em;
   margin-left: 12em;
-}.ListingAllEmployee-Left {
+}
+.ListingAllEmployee-Left {
   float: left;
   width: 50%;
   text-align: center;
-}.ListingAllEmployee-Right {
+}
+.ListingAllEmployee-Right {
   float: right;
   width: 50%;
-}.top-search {
+}
+.top-search {
   text-align: center;
 }
 input.searchemployee-input {
@@ -367,61 +423,82 @@ input.searchemployee-input {
   border: none;
   border-bottom: solid 1px;
   margin: 1em;
-}input.searchemployee-input:focus {
+}
+input.searchemployee-input:focus {
   outline: none;
-}.offcanvas-header {
+}
+.offcanvas-header {
   background-color: black;
   color: white;
-}.offcanvas-body.px-0 {
-  background-image: linear-gradient(to bottom right,#d8e5fa, #fdfdfd);
-}button.btn-close.text-reset {
+}
+.offcanvas-body.px-0 {
+  background-image: linear-gradient(to bottom right, #d8e5fa, #fdfdfd);
+}
+button.btn-close.text-reset {
   background: white;
-}.overall-profile {
-  float: left;
-width: 100%;
-padding: 3em;
-}.bg-content {
+}
+.overall-profile {
   float: left;
   width: 100%;
-  background-image: linear-gradient(to bottom right,#d8e5fa, #fdfdfd);
-}.pro-picbyeemployee {
+  padding: 3em;
+}
+.bg-content {
+  float: left;
+  width: 100%;
+  background-image: linear-gradient(to bottom right, #d8e5fa, #fdfdfd);
+}
+.pro-picbyeemployee {
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: center center;
-}img.nav-image {
+}
+img.nav-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: center center;
-  box-shadow: rgba(0,0,0,0.35) 0px 5px 15px;
-}li.nav-item {
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+li.nav-item {
   margin-left: 2.7em;
   font-size: 1em;
   font-weight: bolder;
-}.border-shadow {
+}
+.border-shadow {
   width: 300px;
   height: 300px;
   border-radius: 50%;
   overflow: hidden;
   position: relative;
   margin-left: 3em;
-  box-shadow: rgba(0,0,0,0.35)0px 5px 15px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   margin-top: 3em;
-}.rounded-profile{
+}
+.rounded-profile {
   width: 100px;
   height: 100px;
   border-radius: 50%;
   overflow: hidden;
   position: relative;
   margin-left: 3em;
-  box-shadow: rgba(0,0,0,0.35)0px 5px 15px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   margin-top: 1em;
-}.border-shadow1 {
+}
+.border-shadow1 {
   width: 300px;
   height: 300px;
   border-radius: 50%;
   overflow: hidden;
   position: relative;
-  box-shadow: rgba(0,0,0,0.35) 0px 5px 15px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+.Sele-Opt {
+  padding: 1em;
+  font-weight: bolder;
+}
+input#manage,
+#employee {
+  margin: 1em;
+  cursor: pointer;
 }
