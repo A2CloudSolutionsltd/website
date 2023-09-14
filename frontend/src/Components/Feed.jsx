@@ -1,40 +1,40 @@
-import React, { useEffect, useState } from "react";
-import "bootstrap-icons/font/bootstrap-icons.css";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import Loader from "./Loader";
-import axios from "axios";
-function Profile() {
-  const [isLoading, setIsLoading] = useState(true);
-  useEffect(() => {
-    const loadingTimeout = setTimeout(() => {
-      setIsLoading(false);
-    }, 1500);
-    return () => {
-      clearTimeout(loadingTimeout);
-    };
-  }, []);
-  const navigate = useNavigate();
-  const handleLogout = () => {
-    axios
-      .get("http://localhost:8081/logout")
-      .then((res) => {
-        if (res.data.Status === "Success") {
-          navigate("/Login");
-        } else {
-          console.error("Logout failed");
-        }
-      })
-      .catch((err) => {
-        console.error("Logout failed:", err);
-      });
-  };
+import React, { useEffect, useState } from 'react'
+import Loader from './Loader';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+function Feed() {
+    const [isLoading , setIsLoading] = useState(true);
+    useEffect(()=>{
+        const loadingTimeout = setTimeout(()=>{
+     setIsLoading(false);
+        },1500)
+    return () =>{
+        clearTimeout(loadingTimeout);
+    }
+    })
+    const navigate = useNavigate();
+    const handleLogout = () => {
+        axios
+          .get("http://localhost:8081/logout")
+          .then((res) => {
+            if (res.data.Status === "Success") {
+              navigate("/Login");
+            } else {
+              console.error("Logout failed");
+            }
+          })
+          .catch((err) => {
+            console.error("Logout failed:", err);
+          });
+      };
   return (
     <div>
-      {isLoading ? (
-        <Loader />
-      ) : (
-        <div>
-<nav className="navbar navbar-expand-lg navbar-light">
+        {isLoading ? (
+            <Loader />
+        ): (
+            <div>
+                <nav className="navbar navbar-expand-lg navbar-light">
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
                   <ul className="navbar-nav mr-auto">
                     <li className="nav-item">
@@ -70,13 +70,10 @@ function Profile() {
                   </ul>
                 </div>
               </nav>
-<div>
-  <h1>Profile,,</h1>
-</div>
-        </div>
-      )}
+            </div>
+        )}
     </div>
-  );
+  )
 }
 
-export default Profile;
+export default Feed

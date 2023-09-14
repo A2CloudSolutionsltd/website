@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 function SignIn() {
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
+  const [selectedOption, setSelectedOption] = useState("employee");
 
   useEffect(() => {
     const loadingTimeout = setTimeout(() => {
@@ -22,18 +23,34 @@ function SignIn() {
   });
   axios.defaults.withCredentials = true;
   const [error, setError] = useState("");
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    axios
-      .post("http://localhost:8081/enter", values)
-      .then((res) => {
-        if (res.data.Status === "Success") {
-          navigate("/dashboard");
-        } else {
-          setError(res.data.Error);
-        }
-      })
-      .catch((err) => console.log(err));
+
+    if (selectedOption === "employee") {
+      axios
+        .post("http://localhost:8081/employeeLogin", values)
+        .then((res) => {
+          if (res.data.Status === "Success") {
+            const email = values.email;
+            navigate("/Employee-dashboard/" + email);
+          } else {
+            setError(res.data.Error);
+          }
+        })
+        .catch((err) => console.log(err));
+    } else if (selectedOption === "manager") {
+      axios
+        .post("http://localhost:8081/enter", values)
+        .then((res) => {
+          if (res.data.Status === "Success") {
+            navigate("/dashboard");
+          } else {
+            setError(res.data.Error);
+          }
+        })
+        .catch((err) => console.log(err));
+    }
   };
 
   return (
@@ -46,18 +63,6 @@ function SignIn() {
           <div className="text-danger">{error && error}</div>
           <div className="Process-Left">
             <form onSubmit={handleSubmit} className="Signup-form">
-              <div className="Sele-Opt">
-                <Link to="/Login">
-                  <input type="radio" id="manage" />
-                </Link>
-                <label>Manager</label>
-                <Link to="/Employee-SignUp">
-                  {" "}
-                  <input type="radio" id="employee" />
-                </Link>
-                <label>Employee</label>
-              </div>
-
               <label className="signup-label">
                 Email:
                 <input
@@ -88,6 +93,28 @@ function SignIn() {
                   required
                 />
               </label>
+              <div className="Sele-Opt">
+                <label>
+                  <input
+                    type="radio"
+                    name="loginType"
+                    value="manager"
+                    checked={selectedOption === "manager"}
+                    onChange={() => setSelectedOption("manager")}
+                  />
+                  Manager
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="loginType"
+                    value="employee"
+                    checked={selectedOption === "employee"}
+                    onChange={() => setSelectedOption("employee")}
+                  />
+                  Employee
+                </label>
+              </div>
               <label className="signup-label1">
                 <input type="checkbox" required />I agree to the{" "}
                 <span>
@@ -99,28 +126,6 @@ function SignIn() {
                 Login
               </button>
             </form>
-            <div className="Other-Login">
-              <div className="Text">
-                <p>Or login with</p>
-              </div>
-              <div className="social-icons">
-                <img
-                  src="assets/images/fb.png"
-                  className="soical-i"
-                  alt="inner file missing"
-                />
-                <img
-                  src="assets/images/tweet.png"
-                  className="soical-i"
-                  alt="inner file missing"
-                />
-                <img
-                  src="assets/images/Google.png"
-                  className="soical-i"
-                  alt="inner file missing"
-                />
-              </div>
-            </div>
           </div>
           <div className="Process-right">
             <img
@@ -128,6 +133,9 @@ function SignIn() {
               className="signup-img"
               alt="inner file missing"
             />
+            <p className='image-bottom-para'>
+              <Link to="/Register">Create Account !</Link>
+            </p>
           </div>
         </div>
       )}

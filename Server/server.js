@@ -149,33 +149,46 @@ app.put('/updateEmployee/:email', upload.single('image'), (req, res) => {
   });
 });
 
-// app.put('/update/:email',upload.single('image'), (req, res) => {
-//     const email = req.params.email;
-//     const newRole = req.body.role; 
-//     const newName = req.body.name; 
-//     const newAddress= req.body.address; 
-//     const newPassword = req.body.password; 
-//     const image =    req.file.filename
-  
-  
-//     const sql = "UPDATE employee SET role = ?, name = ?, address = ?, password = ? , image = ? WHERE email = ?";
-//     con.query(sql, [newRole, newName, newAddress, newPassword,image , email], (err, result) => {
-//       if (err) return res.json({ Error: "Update employee error in SQL" });
-//       return res.json({ Status: "Success" });
-//     });
-//   });
-
-  app.put('/updateEmployee/:email', (req, res) => {
+app.put('/update/:email',upload.single('image'), (req, res) => {
     const email = req.params.email;
-    const newDob = req.body.dob; 
-    const newMobile= req.body.mobile; 
-    const newEducation = req.body.education; 
-    const sql = "UPDATE employee SET dob = ?, mobile = ?, education = ? WHERE email = ?";
-    con.query(sql, [newDob, newMobile, newEducation, email], (err, result) => {
+    const newRole = req.body.role; 
+    const newName = req.body.name; 
+    const newAddress= req.body.address; 
+
+  
+  
+    const sql = "UPDATE employee SET role = ?, name = ?, address = ?  WHERE email = ?";
+    con.query(sql, [newRole, newName, newAddress, email], (err, result) => {
       if (err) return res.json({ Error: "Update employee error in SQL" });
       return res.json({ Status: "Success" });
     });
   });
+
+  app.put('/updatetask/:email', (req, res) => {
+    const projecttitle = req.body.projecttitle;   // Corrected attribute name
+    const description = req.body.description;
+    const deadline = req.body.deadline;
+    const email = req.params.email;   // Assuming email is a URL parameter
+  
+    const sql = "UPDATE employee SET projecttitle = ?, description = ?, deadline = ? WHERE email = ?";
+    con.query(sql, [projecttitle, description, deadline, email], (err, result) => {
+      if (err) return res.json({ Error: "Update employee error in SQL" });
+      return res.json({ Success: "Success" });   // Corrected capitalization
+    });
+  });
+  
+  
+  // app.put('/updateEmployee/:email', (req, res) => {
+  //   const email = req.params.email;
+  //   const newDob = req.body.dob; 
+  //   const newMobile= req.body.mobile; 
+  //   const newEducation = req.body.education; 
+  //   const sql = "UPDATE employee SET dob = ?, mobile = ?, education = ? WHERE email = ?";
+  //   con.query(sql, [newDob, newMobile, newEducation, email], (err, result) => {
+  //     if (err) return res.json({ Error: "Update employee error in SQL" });
+  //     return res.json({ Status: "Success" });
+  //   });
+  // });
 
   const verifyUser = (req, res, next) => {
     const token = req.cookies.token;

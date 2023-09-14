@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import Loader from "./Loader";
 
 function EmpProfile() {
   const handleLogout = () => {
@@ -9,7 +10,7 @@ function EmpProfile() {
       .get("http://localhost:8081/logout")
       .then((res) => {
         if (res.data.Status === "Success") {
-          navigate("/Employee-SignUp");
+          navigate("/Login");
         } else {
           console.error("Logout failed");
         }
@@ -29,14 +30,27 @@ function EmpProfile() {
       .then((res) => setEmployee(res.data.Result[0]))
       .catch((err) => console.log(err));
   }, [email]);
+  const [ isLoading , setIsLoading] = useState(true);
+  useEffect(()=>{
+   const loadingTimeout = setTimeout(()=>{
+    setIsLoading(false);
+   },1500)
+   return() => {
+    clearTimeout(loadingTimeout)
+   }
+  })
   return (
     <div>
-      <div className="bg-content">
+      {isLoading ? (
+        <Loader />
+      ):(
+<div>
+<div className="bg-content">
         <nav className="navbar navbar-expand-lg navbar-light">
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav mr-auto">
               <li className="nav-item">
-                <Link className="nav-link">Feed</Link>
+                <Link className="nav-link" to={`/Employee-Feed/${email}`}>Feed</Link>
               </li>
               <li className="nav-item">
                 <Link className="nav-link" to={`/Employee-dashboard/${email}`}>
@@ -44,12 +58,13 @@ function EmpProfile() {
                 </Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link" to="/TaskandProject">
+                <Link className="nav-link" to={`/Task-Project/${email}`}>
                   Task & Projects
                 </Link>
               </li>
-              <li className="nav-item"></li>
+              <li className="nav-item">
               <Link className="nav-link">Events</Link>
+              </li>
               <li className="nav-item">
                 <Link className="nav-link">Calendar</Link>
               </li>
@@ -131,6 +146,9 @@ function EmpProfile() {
           </div>  
         </div>
       </div>
+</div>
+      )}
+    
     </div>
   );
 }

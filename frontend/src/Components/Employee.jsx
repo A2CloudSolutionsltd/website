@@ -125,80 +125,44 @@ function Employee() {
         <Loader />
       ) : (
         <div>
-          <div
-            className="offcanvas offcanvas-start w-25"
-            tabindex="-1"
-            id="offcanvas"
-            data-bs-keyboard="false"
-            data-bs-backdrop="false"
-          >
-            <div className="offcanvas-header">
-              <h6 className="offcanvas-title d-none d-sm-block" id="offcanvas">
-                Menu
-              </h6>
-              <button
-                type="button"
-                className="btn-close text-reset"
-                data-bs-dismiss="offcanvas"
-                aria-label="Close"
-              >
-                X
-              </button>
-            </div>
-            <div className="offcanvas-body px-0">
-              <ul
-                className="nav nav-pills flex-column mb-sm-auto mb-0 align-items-start"
-                id="menu"
-              >
-                <li>
-                  <Link to="/dashboard" className="nav-link text-truncate">
-                    <i className="fs-4 bi-speedometer2"></i>
-                    <span className="ms-1 d-none d-sm-inline">Dashboard</span>
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/CRUD-employee" className="nav-link text-truncate">
-                    <i className="fs-4 bi-people"></i>
-                    <span className="ms-1 d-none d-sm-inline">
-                      Manage Employee
-                    </span>{" "}
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/profile" className="nav-link text-truncate">
-                    <i className="fs-4 bi-person"></i>
-                    <span className="ms-1 d-none d-sm-inline">Profile</span>
-                  </Link>
-                </li>
-                <li>
-                  <a class="nav-link   text-truncate">
-                    <i className="fs-4 bi-power"></i>
-                    <span
-                      onClick={handleLogout}
-                      class="ms-1 d-none d-sm-inline"
-                    >
-                      Logout
-                    </span>
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div className="container-fluid">
-            <div className="row">
-              <div className="col min-vh-100 py-3">
-                <button
-                  className="btn float-end"
-                  data-bs-toggle="offcanvas"
-                  data-bs-target="#offcanvas"
-                  role="button"
-                >
-                  <i
-                    className="bi bi-arrow-right-square-fill fs-3"
-                    data-bs-toggle="offcanvas"
-                    data-bs-target="#offcanvas"
-                  ></i>
-                </button>
+<nav className="navbar navbar-expand-lg navbar-light">
+                <div className="collapse navbar-collapse" id="navbarSupportedContent">
+                  <ul className="navbar-nav mr-auto">
+                    <li className="nav-item">
+                      <Link className="nav-link">Feed</Link>
+                    </li>
+      
+                    <li className="nav-item">
+                      <Link className="nav-link"to="/dashboard">
+                        Dashboard
+                      </Link>
+                    </li>
+                    <li className="nav-item">
+                      <Link className="nav-link"  to="/CRUD-employee">
+                       Manage Employee
+                      </Link>
+                    </li>
+                    <li className="nav-item">
+                      <Link className="nav-link">Events</Link>
+                    </li>
+                    <li className="nav-item">
+                      <Link className="nav-link">Calendar</Link>
+                    </li>
+                    <li className="nav-item">
+                      <Link className="nav-link" to="/profile">
+                        Profile
+                      </Link>
+                    </li>
+                    <li className="nav-item1">
+                      <button className="nav-link" onClick={handleLogout}>
+                        Logout
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+              </nav>
+      
+
                 <div className="adjust">
                   <div className="d-flex flex-column align-items-center pt-4">
                     <form
@@ -337,9 +301,9 @@ function Employee() {
                     </form>
                   </div>
                 </div>
-              </div>
-            </div>
-          </div>
+          
+     
+  
 
           <div className="emloyee-list">
             <h3>Employee List.</h3>
@@ -413,6 +377,11 @@ function Employee() {
                       >
                         Delete
                       </button>
+                      <Link to={"/AssignTask/" + encodeURIComponent(employee.email)}>
+                      <button className="Assign">
+                        Assign Task
+                      </button>
+                      </Link>
                     </div>
                   </div>
                 </div>

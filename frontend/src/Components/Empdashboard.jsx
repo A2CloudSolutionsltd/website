@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import Loader from "./Loader";
 
 function Empdashboard() {
   const navigate = useNavigate();
@@ -13,7 +14,7 @@ function Empdashboard() {
         if (res.data.Status === "Success") {
           console.log(res.data);
         } else {
-          navigate("/Employee-SignUp");
+          navigate("/Login");
         }
       })
       .catch((err) => {
@@ -26,7 +27,7 @@ function Empdashboard() {
       .get("http://localhost:8081/logout")
       .then((res) => {
         if (res.data.Status === "Success") {
-          navigate("/Employee-SignUp");
+          navigate("/Login");
         } else {
           console.error("Logout failed");
         }
@@ -43,14 +44,28 @@ function Empdashboard() {
       .catch((err) => console.log(err));
   }, [email]);
 
+  const [isLoading , setIsLoading] = useState(true);
+  useEffect(()=>{
+    const loadingTimeout = setTimeout(()=>{
+      setIsLoading(false)
+    },1500)
+    return() =>{
+      clearTimeout(loadingTimeout)
+    }
+  })
+
   return (
     <div>
+      {isLoading ? (
+        <Loader />
+      ): (
       <div>
+              <div>
         <nav className="navbar navbar-expand-lg navbar-light">
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav mr-auto">
               <li className="nav-item">
-                <Link className="nav-link">Feed</Link>
+                <Link className="nav-link" to={`/Employee-Feed/${email}`}>Feed</Link>
               </li>
 
               <li className="nav-item">
@@ -59,7 +74,7 @@ function Empdashboard() {
                 </Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link" to="/TaskandProject">
+                <Link className="nav-link" to={`/Task-Project/${email}`}>
                   Task & Projects
                 </Link>
               </li>
@@ -95,6 +110,9 @@ function Empdashboard() {
           </h2>
         </div>
       </div>
+      </div>
+      )}
+
     </div>
   );
 }
