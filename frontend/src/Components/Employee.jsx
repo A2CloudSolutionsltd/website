@@ -6,7 +6,8 @@ import Loader from "./Loader";
 function Employee() {
   const inputRef = useRef(null);
   const [suggestions, setSuggestions] = useState([]);
-
+  const [manager , setManager] = useState({});
+ const {email} = useParams();
   const autoCompleteAddress = (query) => {
     fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${query}`)
       .then((response) => response.json())
@@ -17,7 +18,12 @@ function Employee() {
         console.error(error);
       });
   };
-
+  useEffect(() => {
+    axios
+      .get(`http://localhost:8081/manager/${email}`)
+      .then((res) => setManager(res.data.Result[0]))
+      .catch((err) => console.log(err));
+  }, [email]);
   const handleInputChange = () => {
     const query = inputRef.current.value;
     autoCompleteAddress(query);
@@ -125,20 +131,17 @@ function Employee() {
         <Loader />
       ) : (
         <div>
-<nav className="navbar navbar-expand-lg navbar-light">
+ <nav className="navbar navbar-expand-lg navbar-light">
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
                   <ul className="navbar-nav mr-auto">
-                    <li className="nav-item">
-                      <Link className="nav-link">Feed</Link>
-                    </li>
       
                     <li className="nav-item">
-                      <Link className="nav-link"to="/dashboard">
+                      <Link className="nav-link"to={`/dashboard/${email}`}>
                         Dashboard
                       </Link>
                     </li>
                     <li className="nav-item">
-                      <Link className="nav-link"  to="/CRUD-employee">
+                      <Link className="nav-link"  to={`/CRUD-employee/${email}`}>
                        Manage Employee
                       </Link>
                     </li>
@@ -149,7 +152,7 @@ function Employee() {
                       <Link className="nav-link">Calendar</Link>
                     </li>
                     <li className="nav-item">
-                      <Link className="nav-link" to="/profile">
+                      <Link className="nav-link" to={`/profile/${email}`}>
                         Profile
                       </Link>
                     </li>
@@ -336,12 +339,13 @@ function Employee() {
                           className="proimage"
                         />
                       </div>
+                      
                     </div>
                     <div className="ListingAllEmployee-Right">
                       <strong>
                         <h2>{employee.name}</h2>
                       </strong>
-                      <p>{employee.email}</p>
+                      <p>{employee.email}<br />(<strong>{employee.team}</strong>)</p>
                       <label>Title :</label>
                       <strong>
                         <p>{employee.role}</p>

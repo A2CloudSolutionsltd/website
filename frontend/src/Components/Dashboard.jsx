@@ -1,34 +1,46 @@
 import React, { useEffect, useState } from "react";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import Loader from "./Loader";
 import axios from "axios";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 function Dashboard() {
   const navigate = useNavigate();
+  const { email } = useParams();
   const [isLoading, setIsLoading] = useState(true);
+  const [employee, setEmployee] = useState({});
+  const [manager, setManager] = useState({});
+  const [employeeCount, setEmployeeCount] = useState();
+
   useEffect(() => {
     const loadingTimeout = setTimeout(() => {
       setIsLoading(false);
     }, 1500);
+
     return () => {
       clearTimeout(loadingTimeout);
     };
   }, []);
+
   axios.defaults.withCredentials = true;
+
   useEffect(() => {
-    axios.get("http://localhost:8081/dashboard").then((res) => {
-      const id = res.data.id;
-      if (res.data.Status === "Success") {
-        console.log(res);
-      } else {
-        navigate("/Login");
-      }
-    });
-  });
+    axios.get('http://localhost:8081/employeeCount')
+      .then(res => {
+        setEmployeeCount(res.data[0].employee)
+      }).catch(err => console.log(err));
+  }, []);
+
+  useEffect(() => {
+    axios.get(`http://localhost:8081/employee/${email}`)
+      .then((res) => setEmployee(res.data.Result[0]))
+      .catch((err) => console.log(err));
+  }, [email]);
 
   const handleLogout = () => {
-    axios
-      .get("http://localhost:8081/logout")
+    axios.get("http://localhost:8081/logout")
       .then((res) => {
         if (res.data.Status === "Success") {
           navigate("/Login");
@@ -40,50 +52,91 @@ function Dashboard() {
         console.error("Logout failed:", err);
       });
   };
+
+  useEffect(() => {
+    axios.get(`http://localhost:8081/manager/${email}`)
+      .then((res) => setManager(res.data.Result[0]))
+      .catch((err) => console.log(err));
+  }, [email]);
+
   return (
     <div>
       {isLoading ? (
         <Loader />
       ) : (
         <div>
-        <nav className="navbar navbar-expand-lg navbar-light">
-                <div className="collapse navbar-collapse" id="navbarSupportedContent">
-                  <ul className="navbar-nav mr-auto">
-                    <li className="nav-item">
-                      <Link className="nav-link" to="/Feed">Feed</Link>
-                    </li>
-      
-                    <li className="nav-item">
-                      <Link className="nav-link"to="/dashboard">
-                        Dashboard
-                      </Link>
-                    </li>
-                    <li className="nav-item">
-                      <Link className="nav-link"  to="/CRUD-employee">
-                       Manage Employee
-                      </Link>
-                    </li>
-                    <li className="nav-item">
-                      <Link className="nav-link">Events</Link>
-                    </li>
-                    <li className="nav-item">
-                      <Link className="nav-link">Calendar</Link>
-                    </li>
-                    <li className="nav-item">
-                      <Link className="nav-link" to="/profile">
-                        Profile
-                      </Link>
-                    </li>
-                    <li className="nav-item1">
-                      <button className="nav-link" onClick={handleLogout}>
-                        Logout
-                      </button>
-                    </li>
-                  </ul>
+          <nav className="navbar navbar-expand-lg navbar-light">
+            <div className="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul className="navbar-nav mr-auto">
+                <li className="nav-item">
+                  <Link className="nav-link" to={`/dashboard/${email}`}>
+                    Dashboard
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to={`/CRUD-employee/${email}`}>
+                    Manage Employee
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link">Events</Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link">Calendar</Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to={`/profile/${email}`}>
+                    Profile
+                  </Link>
+                </li>
+                <li className="nav-item1">
+                  <button className="nav-link" onClick={handleLogout}>
+                    Logout
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </nav>
+          <div className="Leave-aproval">
+            <div className="LeaveandCount1">
+              <div className="nameimg">
+                <div className="rounded-profile">
+                  <img
+                    src={`http://localhost:8081/images/` + manager.image}
+                    alt="Upload Image"
+                    className="nav-image"
+                  />
                 </div>
-              </nav>
+                <p><strong>Welcome {manager.name}</strong></p>
+                <p>{manager.email}</p>
+              </div>
+              <div className="count1">
+                <h5>Employee Count</h5>
+                <img src="/assets/images/Employee.png" alt="Employee-count" className="Countimage" />
+                <p>{employeeCount}</p>
+              </div>
+              <div className="leave1">
+                <h5>On-Leave</h5>
+                <img src="/assets/images/Leave.png" alt="Employee-count" className="Leaveimage" />
+                <p>-</p>
+              </div>
+              <div className="leave1">
+                <img src="/assets/images/colored-leave.png" alt="Employee-leave" className="Leavereqimage" />
+                <Link to="/Employee-Leave-Request"><button className="req-btn">Leave Request</button></Link>
+              </div>
+              <div className="leave1">
+                <img src="/assets/images/Employee.png" alt="Employee-count" className="Leavereqimage" />
+                <Link to="/View-Team"><button className="req-btn">View Teams</button></Link>
+              </div>
+            </div>
+            <div className="LeaveandCount1">
+              <div className="leave1">
+                <img src="/assets/images/add.jpg" alt="Employee-count" className="addmanager" />
+                <Link to="/Add-Manager"><button className="req-btn">Add Manager</button></Link>
+              </div>
+            </div>
+          </div>
         </div>
-                
       )}
     </div>
   );

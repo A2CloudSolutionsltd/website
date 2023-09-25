@@ -125,11 +125,6 @@ function EmployeeTask() {
             <p>Give us an Update on Your Current Work( <strong>{employee.projecttitle}</strong>)</p>
            
             <textarea placeholder="Description"className="task-des"/>
-            <select>
-              <option>Pending</option>
-              <option>Completed</option>
-              <option>Rejected</option>
-            </select>
             <button className="Tsk-sub-btn">Post </button>
             <div className="logo">
               <label><strong>Project-Description</strong></label>

@@ -44,7 +44,8 @@ function SignIn() {
         .post("http://localhost:8081/enter", values)
         .then((res) => {
           if (res.data.Status === "Success") {
-            navigate("/dashboard");
+            const email  = values.email;
+            navigate("/dashboard/"+email);
           } else {
             setError(res.data.Error);
           }

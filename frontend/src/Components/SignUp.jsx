@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Loader from './Loader';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -7,6 +7,8 @@ import {
 } from 'react-router-dom'
 
 function SignUp() {
+  const inputRef = useRef(null);
+  const [suggestions, setSuggestions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     const loadingTimeout = setTimeout(() => {
@@ -50,7 +52,29 @@ function SignUp() {
     }));
   };
 
+  const autoCompleteAddress = (query) => {
+    fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${query}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setSuggestions(data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
+  const handleInputChange = (e) => {
+    const query = e.target.value;
+    autoCompleteAddress(query);
+  };
+
+  const handleSuggestionClick = (address) => {
+    setValues((prevValues) => ({
+      ...prevValues,
+      address: address,
+    }));
+    setSuggestions([]);
+  };
   return (
     <div>
       {isLoading ? (
@@ -83,7 +107,28 @@ function SignUp() {
               </label>
               <label className='signup-label'>
                 Address:
-                <input type="text"  value={values.address} onChange={handleChange} name="address" className='signup-input' required />
+                <input
+                  type="text"
+                  value={values.address}
+                  onChange={(e) => {
+                    handleChange(e);
+                    handleInputChange(e);
+                  }}
+                  ref={inputRef}
+                  name="address"
+                  className='signup-input'
+                  required
+                />
+                <ul>
+                  {suggestions.map((item, index) => (
+                    <li
+                      key={index}
+                      onClick={() => handleSuggestionClick(item.display_name)}
+                    >
+                      {item.display_name}
+                    </li>
+                  ))}
+                </ul>
               </label>
               <label className='signup-label1'>
                 <input type="checkbox" required />

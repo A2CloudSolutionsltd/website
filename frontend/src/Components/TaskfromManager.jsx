@@ -12,15 +12,19 @@ const navigate = useNavigate();
 const handleSubmit = (event) => {
   event.preventDefault();
   const encodedEmail = encodeURIComponent(params.email);
+  const selectedTeam = document.querySelector('.team-select').value;
+
   axios
     .put("http://localhost:8081/updatetask/" + encodedEmail, {
       projecttitle: data.projecttitle,   // Corrected attribute name
       description: data.description,
-      deadline: data.deadline
+      deadline: data.deadline,
+      team: selectedTeam
     })
     .then((res) => {
-      if (res.data.Success) {   // Corrected capitalization
-        navigate("/CRUD-EMPLOYEE")
+      if (res.data.Success) {
+       
+        navigate(`/CRUD-EMPLOYEE/${encodedEmail}`);
       }
     })
     .catch((err) => console.log(err));
@@ -67,13 +71,40 @@ useEffect(() => {
                     <input type='date' value={data.deadline} name='deadline'
                     onChange={(e) => setData({...data, deadline:e.target.value})}
                     />
+
                     <p>{employee.deadline}</p>
-                    
+                    <div className='Team-Assign'>
+                      <label className='Label-Assign'>Assign Team</label>
+                      <select className='team-select' required>
+                        <option className='team-option'>
+                          Select
+                        </option>
+                        <option className='team-option' value="Team-Front-End">
+                          Front-End-Developer
+                        </option>
+                        <option className='team-option'value="Team-Back-End">
+                          Back-End-Developer
+                        </option>
+                        <option className='team-option' value="Team-Full-Stack">
+                          Full Stack Developer
+                        </option>
+                        <option className='team-option' value="Team-Testing">
+                          Testing
+                        </option>
+                        <option className='team-option' value="Team-Analyst">
+                          Data-Analyst
+                        </option>
+                        <option className='team-option' value="Team-Designing">
+                          Designer
+                        </option>
+                      </select>
+                    </div>
                      <button type='submit'>Submit</button>
 </form>
                 </div>
                 <div className='TaskLeft'>
                     <img src='/assets/images/task-assign.avif' alt='image-missing' className='Task-Img'/>
+
                     </div>
 
                   </div>
