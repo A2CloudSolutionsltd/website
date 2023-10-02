@@ -21,7 +21,7 @@ const Timer = () => {
 
   return (
     <div>
-      <h1>Timer: {formatTime(seconds)}</h1>
+      <h5>{formatTime(seconds)}</h5>
     </div>
   );
 };

@@ -58,7 +58,7 @@ function ApplyLeave() {
             {isLoading ? (
                 <Loader />
             ) : (
-                <div>
+                <div >
                     <div className='ApplyLeave'>
                         <div className='text-left'>
                             <h2>Apply Leave</h2>

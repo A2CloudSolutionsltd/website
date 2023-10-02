@@ -54,36 +54,36 @@ function LeaveReq() {
       {isLoading ? (
         <Loader />
       ) : (
-        <div>
+        <div  className='whole-task'>
           <div className='Leave-req-head'>
             <h3>Leave Request</h3>
           </div>
 
           {filteredData.length > 0 && (
-            <div className='Leave-List'>
-              <table>
+            <div className='task-submit-list'>
+              <table  className='custom-table'>
                 {/* Table Header */}
                 <thead className='Leave-head'>
                   <tr>
-                    <th>Name</th>
-                    <th>LeaveType</th>
-                    <th>From</th>
-                    <th>Upto</th>
-                    <th>Reason</th>
-                    <th>Status</th>
-                    <th>Update</th>
+                    <th className='custom-table-header'>Name</th>
+                    <th className='custom-table-header'>LeaveType</th>
+                    <th className='custom-table-header'>From</th>
+                    <th className='custom-table-header'>Upto</th>
+                    <th className='custom-table-header'>Reason</th>
+                    <th className='custom-table-header'>Status</th>
+                    <th className='custom-table-header'>Update</th>
                   </tr>
                 </thead>
                 {/* Table Body */}
-                <tbody className='leave-body'>
+                <tbody >
                   {filteredData.map((employee, index) => (
                     <tr key={index}>
-                      <td>{employee.name}</td>
-                      <td>{employee.leavetype}</td>
-                      <td>{employee.startdate}</td>
-                      <td>{employee.enddate}</td>
-                      <td>{employee.reason}</td>
-                      <td>
+                      <td className='custom-table-cell'>{employee.name}</td>
+                      <td className='custom-table-cell'>{employee.leavetype}</td>
+                      <td className='custom-table-cell'>{employee.startdate}</td>
+                      <td className='custom-table-cell'>{employee.enddate}</td>
+                      <td className='custom-table-cell'>{employee.reason}</td>
+                      <td className='custom-table-cell'>
                         {" "}
                         <select id={`status-${employee.name}`}>
                           <option value='Approved'>Approved</option>

@@ -45,13 +45,10 @@ function EmpProfile() {
         <Loader />
       ):(
 <div>
-<div className="bg-content">
+<div className="bg-content1">
         <nav className="navbar navbar-expand-lg navbar-light">
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav mr-auto">
-              <li className="nav-item">
-                <Link className="nav-link" to={`/Employee-Feed/${email}`}>Feed</Link>
-              </li>
               <li className="nav-item">
                 <Link className="nav-link" to={`/Employee-dashboard/${email}`}>
                   Dashboard

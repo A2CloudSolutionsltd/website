@@ -24,7 +24,7 @@ const handleSubmit = (event) => {
     .then((res) => {
       if (res.data.Success) {
        
-        navigate(`/CRUD-EMPLOYEE/${encodedEmail}`);
+        alert("Task Assigned")
       }
     })
     .catch((err) => console.log(err));
@@ -43,19 +43,7 @@ useEffect(() => {
     <div>
 
             <div className='total-task'>
-                                   <button
-                  className="btn float-end"
-                  data-bs-toggle="offcanvas"
-                  data-bs-target="#offcanvas"
-                  role="button"
-                ><Link to="/CRUD-employee">
-                  <i
-                    className="bi bi-arrow-left-square-fill fs-3"
-                    data-bs-toggle="offcanvas"
-                    data-bs-target="#offcanvas"
-                  ></i>
-                  </Link>
-                </button>
+                                 
                 <div className='TaskForm'>
                  <form name="form"
                       onSubmit={handleSubmit} >

@@ -114,7 +114,7 @@ function Employee() {
       .delete(`http://localhost:8081/remove/${encodeURIComponent(email)}`)
       .then((res) => {
         if (res.data.Status === "Success") {
-          window.location.reload(true);
+         console.log("Deleted")
         } else {
           alert("Error deleting employee");
         }
@@ -156,7 +156,12 @@ function Employee() {
                         Profile
                       </Link>
                     </li>
-                    <li className="nav-item1">
+                    <li className="nav-item">
+                  <Link className="nav-link" to="/Time-Sheet-Employee">
+                    Time Sheet
+                  </Link>
+                </li>
+                    <li className="nav-item3">
                       <button className="nav-link" onClick={handleLogout}>
                         Logout
                       </button>
@@ -366,6 +371,7 @@ function Employee() {
                       <strong>
                         <p>{employee.education}</p>
                       </strong>
+                
                       <br />
                       <Link
                         to={

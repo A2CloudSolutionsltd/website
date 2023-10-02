@@ -49,7 +49,7 @@ function Profile() {
       {isLoading ? (
         <Loader />
       ) : (
-        <div>
+        <div className="bg-content1">
 <nav className="navbar navbar-expand-lg navbar-light">
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
                   <ul className="navbar-nav mr-auto">
@@ -75,7 +75,12 @@ function Profile() {
                         Profile
                       </Link>
                     </li>
-                    <li className="nav-item1">
+                    <li className="nav-item">
+                  <Link className="nav-link" to="/Time-Sheet-Employee">
+                    Time Sheet
+                  </Link>
+                </li>
+                    <li className="nav-item3">
                       <button className="nav-link" onClick={handleLogout}>
                         Logout
                       </button>

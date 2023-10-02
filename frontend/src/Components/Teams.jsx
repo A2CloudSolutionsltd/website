@@ -50,52 +50,17 @@ function Teams() {
       }
       teams[employee.team].push(employee.name);
     });
-  
+
     return (
 
         <div>
             {isLoading ? (
                 <Loader />
             ) : (
-                <div>
-                    <nav className="navbar navbar-expand-lg navbar-light" >
-                        <div className="collapse navbar-collapse" id="navbarSupportedContent">
-                            <ul className="navbar-nav mr-auto">
-                                <li className="nav-item">
-                                    <Link className="nav-link" to="/Feed">Feed</Link>
-                                </li>
-
-                                <li className="nav-item">
-                                    <Link className="nav-link" to="/dashboard">
-                                        Dashboard
-                                    </Link>
-                                </li>
-                                <li className="nav-item">
-                                    <Link className="nav-link" to="/CRUD-employee">
-                                        Manage Employee
-                                    </Link>
-                                </li>
-                                <li className="nav-item">
-                                    <Link className="nav-link">Events</Link>
-                                </li>
-                                <li className="nav-item">
-                                    <Link className="nav-link">Calendar</Link>
-                                </li>
-                                <li className="nav-item">
-                                    <Link className="nav-link" to="/profile">
-                                        Profile
-                                    </Link>
-                                </li>
-                                <li className="nav-item1">
-                                    <button className="nav-link" onClick={handleLogout}>
-                                        Logout
-                                    </button>
-                                </li>
-                            </ul>
-                        </div>
-                    </nav>
-
-                
+                <div  className='whole-task'>
+                <div className='Leave-req-head'>
+                  <h3>Teams</h3>
+                </div>
                     <div className='Leave-List'>
                         <div className='display-teams'>
                             {Object.entries(teams).map(([team, members]) => (

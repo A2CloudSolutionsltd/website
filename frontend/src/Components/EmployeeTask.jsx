@@ -36,6 +36,35 @@ function EmployeeTask() {
         console.error("Logout failed:", err);
       });
   };
+  const [values, setValues] = useState({
+    name: "",
+    title:"",
+    description: "",
+    status:"",
+})
+const handleChange = (event) => {
+  const { name, value } = event.target;
+  setValues((prevValues) => ({
+    ...prevValues,
+    [name]: value,
+  }));
+};
+const handleSubmit = (event)=>{
+event.preventDefault();
+
+axios
+.post("http://localhost:8081/tasksubmit", values)
+.then((res)=>{
+   if(res.data.status === "Success"){
+        alert("Data Submitted")
+   }else{
+      alert("Error in Submiting")
+   }
+})
+.catch((err)=>{
+  console.error(err)
+})
+}
   return (
     <div>
       {isLoading ? (
@@ -45,9 +74,6 @@ function EmployeeTask() {
               <nav className="navbar navbar-expand-lg navbar-light">
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav mr-auto">
-            <li className="nav-item">
-              <Link className="nav-link" to={`/Employee-Feed/${email}`}>Feed</Link>
-            </li>
             <li className="nav-item">
               <Link className="nav-link" to={`/Employee-dashboard/${email}`}>Dashboard</Link>
             </li>
@@ -69,6 +95,33 @@ function EmployeeTask() {
           </ul>
         </div>
       </nav>
+      <div className="Task-submit"> 
+           <div className="Left-tasksubmit">
+            <h2>Task Submission</h2>
+            <form onSubmit={handleSubmit}>
+            <label  className="signup-label">Name:</label>
+           <input  type="text" name="name" onChange={handleChange} className="signup-input"  required/>
+           <label  className="signup-label">Project Title:</label>
+           <input type="text" name="title" onChange={handleChange} className="signup-input" required />
+           <label  className="signup-label">Description:</label>
+            <textarea type="text" name="description" onChange={handleChange} className="signup-input" required/>
+            <label  className="signup-label">Status:</label>
+            <div class="custom-select">
+           <select id="status" name="status" onChange={handleChange}>
+             <option  value="pending">Pending</option>
+             <option value="completed">Completed</option>
+              <option value="rejected">Rejected</option>
+            </select>
+            
+            </div>
+
+            <button type="submit" className="Tsk-sub-btn">Post </button>
+            </form>
+           </div>
+           <div className="Right-tasksubmit">
+            <img src="/assets/images/Tasksubmission.png" className="Pic-task" alt="Innerfile mising"/>
+           </div>
+        </div>
       <div className="Task1-part">
         <div className="leftpart1">
           <h2>Your Task,</h2>
@@ -90,8 +143,8 @@ function EmployeeTask() {
         </div>
       </div>
       <div className="Task1-part">
-        <h2>Task Submission Guidelines</h2>
-        <p>
+        <h2>Task Submission Guidelines,</h2>
+        <p className="des-task-p">
           <strong>Task Title:</strong> Enter a concise and descriptive title for
           the task you are currently working for. Make it clear and specific so
           that anyone reading it can understand the task's purpose.
@@ -119,22 +172,7 @@ function EmployeeTask() {
           the "Submit" button to create the task. It will be added to the task
           management system for tracking and monitoring.
         </p>
-        <div className="Task-submit"> 
-           <div className="Left-tasksubmit">
-            <h2>Daily Submission</h2>
-            <p>Give us an Update on Your Current Work( <strong>{employee.projecttitle}</strong>)</p>
-           
-            <textarea placeholder="Description"className="task-des"/>
-            <button className="Tsk-sub-btn">Post </button>
-            <div className="logo">
-              <label><strong>Project-Description</strong></label>
-            <p>{employee.description}</p>
-          </div>
-           </div>
-           <div className="Right-tasksubmit">
-            <img src="/assets/images/Tasksubmission.png" className="Pic-task" alt="Innerfile mising"/>
-           </div>
-        </div>
+
       </div>
       </div>
       )}

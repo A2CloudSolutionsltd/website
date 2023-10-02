@@ -17,12 +17,16 @@ import EditEmployee from './Components/EditEmployee';
 import EmployeeTask from './Components/EmployeeTask';
 import TaskfromManager from './Components/TaskfromManager';
 import SignUp from './Components/SignUp';
-import EmployeeFeed from './Components/EmployeeFeed';
 import ApplyLeave from './Components/ApplyLeave';
 import LeaveReq from './Components/LeaveReq';
 import Teams from './Components/Teams';
 import AddManager from './Components/AddManager';
 import ManagerEditProfile from './Components/ManagerEditProfile';
+import TaskSubmit from './Components/TaskSubmit';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Timesheet from './Components/Timesheet';
+
 function App() {
   
   return (
@@ -42,15 +46,17 @@ function App() {
       <Route path='/EmployeeEditOption/:email' element={<EditEmployee />} />
       <Route path='/AssignTask/:email' element={<TaskfromManager />} />
       <Route path='/View-Team' element={<Teams />} />
-      <Route path='/Employee-Feed/:email' element={<EmployeeFeed />} />
+  
       <Route path='/ApplyLeave/:email' element={<ApplyLeave />} />
       <Route path='/Employee-Leave-Request' element={<LeaveReq />} />
       <Route path='/Add-Manager' element={<AddManager />} />
       <Route path='/Manager-Profile/:email' element={<ManagerEditProfile />} />
+      <Route path = '/Daily-task-Submit-by-employees' element={<TaskSubmit />} />
+      <Route path='/Time-Sheet-Employee' element={<Timesheet />} />
     </Routes>
     </Router>
 
-
+    <ToastContainer />
    
     </div>
   );

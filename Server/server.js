@@ -93,7 +93,8 @@ app.post('/employeelogin', (req, res) => {
           bcrypt.compare(req.body.password.toString(), result[0].password, (err, response)=> {
               if(err) return res.json({Error: "password error"});
               if(response) {
-                  const token = jwt.sign({role: "employee", id: result[0].id}, "jwt-secret-key", {expiresIn: '1d'});
+                const token = jwt.sign({ role: "employee", id: result[0].id }, "jwt-secret-key");
+
                   res.cookie('token', token);
                   return res.json({Status: "Success"})
               } else {
@@ -108,6 +109,7 @@ app.post('/employeelogin', (req, res) => {
   })
 })
 
+
 app.get('/logout', (req, res) => {
   res.clearCookie('token');
   return res.json({ Status: "Success" });
@@ -120,6 +122,13 @@ app.get('/getEmployee', (req, res) => {
         if(err) return res.json({Error: "Get employee error in sql"});
         return res.json({Status: "Success", Result: result})
     })
+})
+app.get("/gettask", (req, res)=>{
+  const sql = "SELECT * FROM task";
+  con.query(sql,(err,result)=>{
+    if(err) return res.json({Error:"Get Task Error"});
+    return res.json({Status:"success",Result:result})
+  })
 })
 
 app.delete('/remove/:email', (req, res) => {
@@ -253,7 +262,49 @@ app.put('/update/:email',upload.single('image'), (req, res) => {
       return res.json({ success: true });
     });
   });
+  app.put('/timeaproval/:name', (req, res) => {
+    const name = req.params.name;
+    const status = req.body.status;
   
+    const sql = "UPDATE employee SET timeupdate = ? WHERE name = ?";
+    con.query(sql, [status, name], (err, result) => {
+      if (err) {
+
+        return res.status(500).json({ error: 'Internal Server Error' });
+      }
+     
+      return res.json({ success: true });
+    });
+  });
+  app.put('/taskapproval/:name', (req, res) => {
+    const name = req.params.name;
+    const status = req.body.status;
+  
+    const sql = "UPDATE task SET approval = ? WHERE name = ?";
+    con.query(sql, [status, name], (err, result) => {
+      if (err) {
+
+        return res.status(500).json({ error: 'Internal Server Error' });
+      }
+     
+      return res.json({ success: true });
+    });
+  });
+  
+  app.put('/time/:email', (req, res) => {
+    const email = req.params.email;
+    const newlogin = req.body.newlogin;
+    const newlogout = req.body.newlogout;
+    const Ddescription = req.body.Ddescription;
+  
+    const sql = "UPDATE employee SET login = ?, logout = ?, Ddescription = ? WHERE email = ?";
+    con.query(sql, [newlogin, newlogout, Ddescription, email], (err, result) => {
+      if (err) {
+        return res.status(500).json({ error: "Internal Error" });
+      }
+      return res.json({ success: true });
+    });
+  });
   
   
   // app.put('/updateEmployee/:email', (req, res) => {
@@ -281,7 +332,7 @@ app.put('/update/:email',upload.single('image'), (req, res) => {
     if (!token) {
       return res.status(401).json({ error: "You are not authenticated" });
     } else {
-      jwt.verify(token, "JWT-KEY", (err, decoded) => {
+      jwt.verify(token, "jwt-secret-key", (err, decoded) => {
         if (err) {
           return res.status(401).json({ error: "Token is invalid or has expired" });
         }
@@ -325,7 +376,19 @@ app.post('/create', (req, res) => {
   });
 });
  
+app.post("/tasksubmit",(req, res)=>{
+  const {name , title , description , status} = req.body;
 
+  const sql = "INSERT into task (`name`, `title` , `description` , `status`) VALUES(? , ? , ? , ?)"
+  const values = [name , title ,description , status];
+
+  con.query(sql, values,(err, result)=>{
+    if(err){
+       return res.json({error:"Error in Inserting"})
+    } 
+    return res.json({status:"Success"});
+  });
+});
 app.post('/createmanager', (req,res)=>{
   const {name , email , password} = req.body;
 
@@ -344,7 +407,37 @@ app.post('/createmanager', (req,res)=>{
     });
   });
 });
-  
+
+
+
+
+app.post('/login/:email', (req, res) => {
+  const email = req.params.email;
+  const loginTime = req.body.loginTime;
+
+  const updateLoginTimeSql = "UPDATE employee SET login = ? WHERE email = ?";
+  con.query(updateLoginTimeSql, [loginTime, email], (err, updateResult) => {
+    if (err) {
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+    return res.json({ Status: "Success" });
+  });
+});
+
+app.post('/logout/:email', (req, res) => {
+  const email = req.params.email;
+  const logoutTime = req.body.logoutTime;
+  const totalHours = req.body.totalHours; // Assuming you have this variable
+
+  const updateSql = "UPDATE employee SET logout = ?, totalhours = ? WHERE email = ?";
+  con.query(updateSql, [logoutTime, totalHours, email], (err, updateResult) => {
+    if(err) return res.json({ Status: "Error", Error: "Error updating logout time and total hours" });
+    return res.json({ Status: "Success" });
+  });
+});
+
+
+
 
 app.listen(8081, () => {
     console.log("Listening");

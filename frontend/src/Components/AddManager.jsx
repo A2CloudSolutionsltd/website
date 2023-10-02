@@ -31,7 +31,7 @@ function AddManager() {
       .then((res) => {
         if (res.data.status === "Success") {
           const email = values.email;
-          navigate(`/dashboard/:${email}`);
+          alert("Account Created")
         } else {
           alert("Error in Registration. Please try again.");
         }
@@ -50,10 +50,11 @@ function AddManager() {
   };
 
   return (
-    <div>
+    <div >
       {isLoading ? (
         <Loader />
       ) : (
+        <div className='whole-task'>
         <div className='sign-up-process'>
           <h2>SignUp</h2>
           <div className='Process-Left'>
@@ -97,6 +98,7 @@ function AddManager() {
           <div className='Process-right'>
             <img src='/assets/images/Screenshot (4).png' alt='inner file missing' className='signup-img1' />
           </div>
+        </div>
         </div>
       )}
     </div>

@@ -64,7 +64,7 @@ function Dashboard() {
       {isLoading ? (
         <Loader />
       ) : (
-        <div>
+        <div className="whole-task">
           <nav className="navbar navbar-expand-lg navbar-light">
             <div className="collapse navbar-collapse" id="navbarSupportedContent">
               <ul className="navbar-nav mr-auto">
@@ -89,7 +89,12 @@ function Dashboard() {
                     Profile
                   </Link>
                 </li>
-                <li className="nav-item1">
+                <li className="nav-item">
+                  <Link className="nav-link" to="/Time-Sheet-Employee">
+                    Time Sheet
+                  </Link>
+                </li>
+                <li className="nav-item3">
                   <button className="nav-link" onClick={handleLogout}>
                     Logout
                   </button>
@@ -112,28 +117,28 @@ function Dashboard() {
               </div>
               <div className="count1">
                 <h5>Employee Count</h5>
-                <img src="/assets/images/Employee.png" alt="Employee-count" className="Countimage" />
+                <img src="/assets/images/count.jpg" alt="Employee-count" className="Countimage" />
                 <p>{employeeCount}</p>
               </div>
               <div className="leave1">
-                <h5>On-Leave</h5>
-                <img src="/assets/images/Leave.png" alt="Employee-count" className="Leaveimage" />
-                <p>-</p>
+              <img src="/assets/images/task1new.png" alt="leave-req" className="leave-req1" />
+                <Link to="/Daily-task-Submit-by-employees"><button className="req-btn">Task</button></Link>
               </div>
               <div className="leave1">
-                <img src="/assets/images/colored-leave.png" alt="Employee-leave" className="Leavereqimage" />
+              <img src="/assets/images/applyleave.png" alt="leave-req" className="leave-req1" />
                 <Link to="/Employee-Leave-Request"><button className="req-btn">Leave Request</button></Link>
               </div>
               <div className="leave1">
-                <img src="/assets/images/Employee.png" alt="Employee-count" className="Leavereqimage" />
+              <img src="/assets/images/viewteams.png" alt="Employee-count" className="leave-req1" />
                 <Link to="/View-Team"><button className="req-btn">View Teams</button></Link>
               </div>
             </div>
             <div className="LeaveandCount1">
               <div className="leave1">
-                <img src="/assets/images/add.jpg" alt="Employee-count" className="addmanager" />
+                <img src="/assets/images/add-manager.png" alt="Employee-count" className="leave-req1" />
                 <Link to="/Add-Manager"><button className="req-btn">Add Manager</button></Link>
               </div>
+              
             </div>
           </div>
         </div>
