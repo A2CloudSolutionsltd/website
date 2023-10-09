@@ -3,6 +3,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import Loader from "./Loader";
+import Footerpart from "./Footerpart";
 
 function EmpProfile() {
   const handleLogout = () => {
@@ -125,7 +126,7 @@ function EmpProfile() {
                 {" "}
                 <p>{employee.mobile}</p>
               </strong>
-              <label>Highest Education:</label>
+              <label>Higher Education:</label>
               <strong>
                 {" "}
                 <p>{employee.education}</p>
@@ -143,7 +144,9 @@ function EmpProfile() {
           </div>  
         </div>
       </div>
+      <Footerpart />
 </div>
+
       )}
     
     </div>

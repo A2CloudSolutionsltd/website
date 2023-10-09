@@ -128,7 +128,7 @@ function EditEmployee() {
                           type="text"
                           className="form-control"
                           id="inputAddress"
-                          placeholder="Highest Education"
+                          placeholder="Higher Education"
                           autoComplete="off"
                           onChange={(e) =>
                             setData({ ...data, education: e.target.value })

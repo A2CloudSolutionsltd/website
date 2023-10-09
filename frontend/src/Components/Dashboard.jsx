@@ -5,6 +5,7 @@ import Loader from "./Loader";
 import axios from "axios";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Footerpart from "./Footerpart";
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -141,6 +142,7 @@ function Dashboard() {
               
             </div>
           </div>
+          <Footerpart />
         </div>
       )}
     </div>

@@ -367,12 +367,17 @@ function Employee() {
                       <strong>
                         <p>{employee.dob}</p>
                       </strong>
-                      <label>Highest Education</label>
+                      <label>Higher Education</label>
                       <strong>
                         <p>{employee.education}</p>
                       </strong>
                 
                       <br />
+                      <Link to={"/AssignTask/" + encodeURIComponent(employee.email)}>
+                      <button className="Assign">
+                        Assign Task
+                      </button>
+                      </Link>
                       <Link
                         to={
                           "/Edit-Employee/" + encodeURIComponent(employee.email)
@@ -387,11 +392,7 @@ function Employee() {
                       >
                         Delete
                       </button>
-                      <Link to={"/AssignTask/" + encodeURIComponent(employee.email)}>
-                      <button className="Assign">
-                        Assign Task
-                      </button>
-                      </Link>
+
                     </div>
                   </div>
                 </div>

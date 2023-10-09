@@ -156,7 +156,7 @@ function ManagerEditProfile() {
                           type="text"
                           className="form-control"
                           id="inputName"
-                          placeholder="Enter Title"
+                          placeholder="1234 St Uk"
                           autoComplete="off"
                           onChange={(e) => {
                             setData({ ...data, address: e.target.value });
@@ -226,7 +226,7 @@ function ManagerEditProfile() {
                           type="text"
                           className="form-control"
                           id="inputAddress"
-                          placeholder="Highest Education"
+                          placeholder="Higher Education"
                           autoComplete="off"
                           onChange={(e) =>
                             setData({ ...data, education: e.target.value })

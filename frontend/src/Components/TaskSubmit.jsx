@@ -5,7 +5,9 @@ import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckSquare } from '@fortawesome/free-solid-svg-icons';
 function TaskSubmit() {
-
+  const { email } = useParams();
+  const params = useParams();
+  const [employee, setEmployee] = useState({});
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -19,9 +21,10 @@ function TaskSubmit() {
   const [data , setData] = useState([]);
 
   useEffect(() => {
-    axios.get("http://localhost:8081/gettask")
+    axios
+      .get("http://localhost:8081/getEmployee")
       .then((res) => {
-        if (res.data.Status === "success") {
+        if (res.data.Status === "Success") {
           setData(res.data.Result);
         } else {
           alert("Error");
@@ -66,29 +69,40 @@ function TaskSubmit() {
       </tr>
     </thead>
     <tbody>
-      {data.map((item, index) => (
-        <tr key={index}>
-          <td className='custom-table-cell'>{item.name}</td>
-          <td className='custom-table-cell'>{item.title}</td>
-          <td className='custom-table-cell'>{item.description}</td>
-          <td className='custom-table-cell'>{item.status}<br /><strong><p>({item.approval})</p></strong></td>
-          <td className='custom-table-cell'>  
-                         {" "}
-                        <select id={`approval-${item.name}`}>
-                          <option value='Approved'>Approved</option>
-                          <option value='Rejected'>Rejected</option>
-                          <option value='Pending'>Pending</option>
-                        </select>
-                        <td
-                        className='approve1'
-                        onClick={() => handleStatusUpdate(item.name)}
-                      >
-                        <FontAwesomeIcon icon={faCheckSquare} />
-                      </td>
-                        </td>
-        </tr>
-      ))}
-    </tbody>
+  {data
+    .filter((employee) => employee.taskDescription) 
+    .map((employee, index) => (
+      <tr key={index}>
+        <td className='custom-table-cell'>{employee.name}</td>
+        <td className='custom-table-cell'>{employee.projecttitle}</td>
+        <td className='custom-table-cell'>{employee.taskDescription}<br />
+        <strong>{employee.taskStatus}</strong>
+        </td>
+        <td className='custom-table-cell'>{employee.taskApproval}<br /></td>
+        <td className='custom-table-cell'>  
+          {" "}
+          <select id={`approval-${employee.name}`}>
+            <option>Select</option>
+            <option value='Approved'>Approved</option>
+            <option value='Rejected'>Rejected</option>
+            <option value='Pending'>Pending</option>
+          </select>
+          <td
+            className='approve1'
+            onClick={() => handleStatusUpdate(employee.name)}
+          >
+            <FontAwesomeIcon icon={faCheckSquare} />
+          </td>
+        </td>
+      </tr>
+    ))}
+</tbody>
+
+
+
+
+
+
   </table>
 </div>
 

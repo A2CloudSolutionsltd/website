@@ -3,6 +3,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Loader from "./Loader";
 import axios from "axios";
+import Footerpart from "./Footerpart";
 function Profile() {
   const [isLoading, setIsLoading] = useState(true);
   const [manager, setManager] = useState({});
@@ -136,7 +137,7 @@ function Profile() {
                 {" "}
                 <p>{manager.mobile}</p>
               </strong>
-              <label>Highest Education:</label>
+              <label>Higher Education:</label>
               <strong>
                 {" "}
                 <p>{manager.education}</p>
@@ -154,6 +155,7 @@ function Profile() {
           </div>  
         </div>
 </div>
+<Footerpart />
         </div>
       )}
     </div>

@@ -5,12 +5,18 @@ import Loader from "./Loader";
 import Timer from "./Timer";
 import 'react-toastify/dist/ReactToastify.css';
 import { toast, ToastContainer } from 'react-toastify';
+import Footerpart from "./Footerpart";
 function Empdashboard() {
 
   const notify = () => {
     toast(employee.status, {
       position: toast.POSITION.TOP_CENTER
     });
+  }
+  const notify1 = () =>{
+    toast(employee.timeupdate,{
+      position:toast.POSITION.TOP_CENTER
+    })
   }
   const navigate = useNavigate();
   const { email } = useParams();
@@ -265,6 +271,7 @@ function Empdashboard() {
               <p>{employeeCount}</p>
           </div>
           <div className="leave">
+            <img src="/assets/images/timechange.webp" alt="Image missing" className="timechange" onClick={e => notify1()}/>
           <button className="in" onClick={handleLogintime} ><img src="/assets/images/login.png" className="log" alt="error" /></button>
   <button className="out" onClick={handleLogoutTime} ><img src="/assets/images/logout.png" className="log" alt="error" /></button>
   {workingMessageVisible && 
@@ -336,7 +343,9 @@ function Empdashboard() {
   </div>
           </div>
                         
-         
+         <div>
+<Footerpart />
+         </div>
           
         </div>
 

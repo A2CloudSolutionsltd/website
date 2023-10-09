@@ -3,6 +3,7 @@ import Loader from './Loader';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckSquare } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
+import Footerpart from './Footerpart';
 function Timesheet() {
     const [isLoading , setIsLoading] = useState(true);
     useEffect(()=>{
@@ -39,7 +40,7 @@ function Timesheet() {
             status: selectedStatus,
           });
     
-          console.log('Status updated successfully');
+          alert('Status updated successfully');
         } catch (error) {
           console.error('Error updating status:', error);
         }
@@ -81,7 +82,7 @@ function Timesheet() {
 </div>
 <div className='ApplyLeave'>
             <div className='text-left'>
-              <h2>Time Changes</h2>
+              <h2>Time Updated Employees List</h2>
             </div>
  
           </div>
@@ -113,6 +114,7 @@ function Timesheet() {
                       <td className='custom-table-cell'>
                         {" "}
                         <select id={`status-${employee.name}`}>
+                          <option>Select</option>
                           <option value='Approved'>Approved</option>
                           <option value='Rejected'>Rejected</option>
                         </select>
@@ -129,9 +131,10 @@ function Timesheet() {
               </table>
             </div>
           )}
-
+ <Footerpart />
         </div>
        )}
+      
     </div>
   )
 }

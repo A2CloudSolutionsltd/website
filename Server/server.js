@@ -6,6 +6,12 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import path from "path";
 import multer from "multer";
+import { Router } from 'express';
+import cron from 'node-cron';
+import nodemailer from 'nodemailer';
+
+const router = Router();
+
 
 const app = express();
 app.use(cors(
@@ -280,7 +286,7 @@ app.put('/update/:email',upload.single('image'), (req, res) => {
     const name = req.params.name;
     const status = req.body.status;
   
-    const sql = "UPDATE task SET approval = ? WHERE name = ?";
+    const sql = "UPDATE employee SET taskApproval = ? WHERE name = ?";
     con.query(sql, [status, name], (err, result) => {
       if (err) {
 
@@ -376,17 +382,29 @@ app.post('/create', (req, res) => {
   });
 });
  
-app.post("/tasksubmit",(req, res)=>{
-  const {name , title , description , status} = req.body;
+// app.post("/tasksubmit",(req, res)=>{
+//   const { description , status} = req.body;
+//  const email  = req.params.email;
 
-  const sql = "INSERT into task (`name`, `title` , `description` , `status`) VALUES(? , ? , ? , ?)"
-  const values = [name , title ,description , status];
+//   const sql = "UPDATE  employee  SET taskDescription = ?,  taskStatus = ?  WHERE email = ?";
+//   const values = [description , status, email];
 
-  con.query(sql, values,(err, result)=>{
-    if(err){
-       return res.json({error:"Error in Inserting"})
-    } 
-    return res.json({status:"Success"});
+//   con.query(sql, values,(err, result)=>{
+//     if(err){
+//        return res.json({error:"Error in Inserting"})
+//     } 
+//     return res.json({status:"Success"});
+//   });
+// });
+app.put('/tasksubmit/:email', (req, res) => {
+  const description = req.body.description;   // Corrected attribute name
+  const status = req.body.status;
+  const email = req.params.email;   // Assuming email is a URL parameter
+
+  const sql = "UPDATE employee SET taskDescription = ?, taskStatus = ? WHERE email = ?";
+  con.query(sql, [description, status,  email], (err, result) => {
+    if (err) return res.json({ Error: "Update Task error in SQL" });
+    return res.json({ Success: "Success" });   // Corrected capitalization
   });
 });
 app.post('/createmanager', (req,res)=>{
@@ -437,6 +455,98 @@ app.post('/logout/:email', (req, res) => {
 });
 
 
+function deleteExpiredRecords() {
+  con.query(
+    `UPDATE employee SET leavetype = NULL, startdate = NULL, enddate = NULL, reason = NULL  WHERE 
+    enddate < CURRENT_DATE`,
+    (error, result) => {
+      if (error) {
+        console.error('Error deleting expired records:', error);
+      } else {
+        console.log(`${result.affectedRows} records deleted.`);
+      }
+    }
+  );
+}
+
+cron.schedule('20 14 * * *', () => {
+  deleteExpiredRecords();
+});
+
+
+function sendEmail(to, subject , text){
+  const mailOptions = {
+    from : "Application1manager1@gmail.com",
+    to,
+    subject,
+    text
+  }
+
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth:{
+      user: 'application1manager1@gmail.com',
+      pass: 'qevu sefx pmgs hpxv'
+    }
+  });
+  
+
+  transporter.sendMail(mailOptions, function(error, info){
+    if (error) {
+      console.error('Error sending email:', error);
+    } else {
+      console.log('Email sent:', info.response);
+    }
+  });
+}
+
+function sendingEmail() {
+  con.query(
+    `SELECT * FROM employee WHERE leavetype IS NOT NULL`,
+    (error , result) =>{
+      if(error){
+        console.error("Error Collecting Data's :", error);
+      } else {
+        console.log("Details Collected for Leave Request");
+
+        const { employee_name, start_date, end_date, leave_type } = result;
+        const emailBody = `
+        You have Received an Leave Request From,
+           Employees !, Please visit website to do action (Approve / Reject)
+        `;
+        sendEmail('jayanthkumar0604@gmail.com', ' Leave Request from  Employees' , emailBody);
+      }
+    }
+  )
+}
+
+function DelayLogin(){
+  con.query(
+    `SELECT * FROM employee WHERE Ddescription IS NOT NULL`,
+    (error, result) =>{
+      if(error){
+        console.error("Error Collecting DelayLogin Data's:", error);
+      }else{
+        console.log("Delay Login Employee List Collected");
+         const emailContent = 
+         `
+         Delay Login / Change in Employee Login Time Sheet , Employees Submmited their Reason for Change / Delay 
+         Visit Website to Approve / Reject 
+
+         `;
+         sendEmail('jayanthkumar0604@gmail.com', 'Delay Login /Change in Time Sheet From Employees' , emailContent);
+      }
+    }
+  )
+}
+
+cron.schedule('35 15 * * *', () => {
+  sendingEmail();
+});
+
+cron.schedule('37 15 * * *',()=>{
+  DelayLogin();
+})
 
 
 app.listen(8081, () => {

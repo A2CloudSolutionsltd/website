@@ -38,7 +38,7 @@ function LeaveReq() {
         status: selectedStatus,
       });
 
-      console.log('Status updated successfully');
+      alert('Status updated successfully');
     } catch (error) {
       console.error('Error updating status:', error);
     }
@@ -81,11 +81,15 @@ function LeaveReq() {
                       <td className='custom-table-cell'>{employee.name}</td>
                       <td className='custom-table-cell'>{employee.leavetype}</td>
                       <td className='custom-table-cell'>{employee.startdate}</td>
-                      <td className='custom-table-cell'>{employee.enddate}</td>
+                      <td className='custom-table-cell'>
+  {new Date(employee.enddate).toISOString().split('T')[0]}
+</td>
+
                       <td className='custom-table-cell'>{employee.reason}</td>
                       <td className='custom-table-cell'>
                         {" "}
                         <select id={`status-${employee.name}`}>
+                          <option>Select</option>
                           <option value='Approved'>Approved</option>
                           <option value='Rejected'>Rejected</option>
                         </select>

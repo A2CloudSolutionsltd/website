@@ -5,6 +5,7 @@ import axios from "axios";
 import Loader from "./Loader";
 function EmployeeTask() {
   const { email } = useParams();
+  const params = useParams();
   const [employee, setEmployee] = useState({});
  const navigate = useNavigate();
   useEffect(() => {
@@ -36,35 +37,28 @@ function EmployeeTask() {
         console.error("Logout failed:", err);
       });
   };
-  const [values, setValues] = useState({
-    name: "",
-    title:"",
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const encodedEmail = encodeURIComponent(params.email);
+
+    axios
+        .put("http://localhost:8081/tasksubmit/" + encodedEmail, {
+            description: data.description,  
+            status: data.status
+        })
+        .then((res) => {
+            if (res.data.Success) {   
+                alert("Report Submitted")
+                console.log(res.data.Success);
+            }
+        })
+        .catch((err) => console.log(err));
+};
+
+const [data, setData] = useState({
     description: "",
     status:"",
-})
-const handleChange = (event) => {
-  const { name, value } = event.target;
-  setValues((prevValues) => ({
-    ...prevValues,
-    [name]: value,
-  }));
-};
-const handleSubmit = (event)=>{
-event.preventDefault();
-
-axios
-.post("http://localhost:8081/tasksubmit", values)
-.then((res)=>{
-   if(res.data.status === "Success"){
-        alert("Data Submitted")
-   }else{
-      alert("Error in Submiting")
-   }
-})
-.catch((err)=>{
-  console.error(err)
-})
-}
+});
   return (
     <div>
       {isLoading ? (
@@ -98,16 +92,24 @@ axios
       <div className="Task-submit"> 
            <div className="Left-tasksubmit">
             <h2>Task Submission</h2>
+            <br />
             <form onSubmit={handleSubmit}>
-            <label  className="signup-label">Name:</label>
-           <input  type="text" name="name" onChange={handleChange} className="signup-input"  required/>
+
            <label  className="signup-label">Project Title:</label>
-           <input type="text" name="title" onChange={handleChange} className="signup-input" required />
+           <p><strong>{employee.projecttitle}</strong></p>
            <label  className="signup-label">Description:</label>
-            <textarea type="text" name="description" onChange={handleChange} className="signup-input" required/>
+            <textarea type="text" name="description" 
+            value={data.description}
+            onChange={(e) => { setData({...data, description:e.target.value})}}
+            className="signup-input" required/>
             <label  className="signup-label">Status:</label>
             <div class="custom-select">
-           <select id="status" name="status" onChange={handleChange}>
+           <select id="status" name="status" 
+           value={data.status}
+           onChange={(e) => { setData({...data, status:e.target.value})}}
+         
+           >
+             <option>Select</option>
              <option  value="pending">Pending</option>
              <option value="completed">Completed</option>
               <option value="rejected">Rejected</option>
@@ -155,10 +157,7 @@ axios
           assignee.
           <br />
           Specify the deadline or due date for the task. Ensure it's realistic
-          and achievable.....
-          <strong>Assigned To:</strong> Select the primary person responsible
-          for completing the task. This person will receive notifications and
-          updates related to the task.
+          and achievable. 
           <br />
           <strong>Additional Assignees:</strong> If more than one person is
           involved in the task, you can add additional assignees here.
