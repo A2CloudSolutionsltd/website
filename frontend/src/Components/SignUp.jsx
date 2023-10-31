@@ -85,27 +85,27 @@ function SignUp() {
           <div className='Process-Left'>
 
             <form name='form' className='Signup-form' method='POST'  onSubmit={handleSubmit}>
-              <label className='signup-label'>
+              <label className='signup-labelupdate'>
                 Name:
                 <input type="text" name="name"  className='signup-input' value={values.name}
                           onChange={handleChange}  required/>
               </label>
-              <label className='signup-label'>
+              <label className='signup-labelupdate'>
                 Email:
                 <input type="email"  name="email"  className='signup-input' value={values.email}
                           onChange={handleChange} required />
               </label>
-              <label className='signup-label'>
+              <label className='signup-labelupdate'>
                 Password:
                 <input type="password"   name="password" className='signup-input' value={values.password}
                           onChange={handleChange} required />
               </label>
-              <label className='signup-label'>
+              <label className='signup-labelupdate'>
                 Role:
                 <input type="text" name="role" value={values.role}
                           onChange={handleChange} className='signup-input' required />
               </label>
-              <label className='signup-label'>
+              <label className='signup-labelupdate'>
                 Address:
                 <input
                   type="text"

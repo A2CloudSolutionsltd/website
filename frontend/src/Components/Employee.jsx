@@ -111,10 +111,10 @@ function Employee() {
 
   const handleDelete = (email) => {
     axios
-      .delete(`http://localhost:8081/remove/${encodeURIComponent(email)}`)
+      .delete(`http://localhost:8081/remove/${email}`)
       .then((res) => {
         if (res.data.Status === "Success") {
-         console.log("Deleted")
+         alert("Employee Succesfully removed")
         } else {
           alert("Error deleting employee");
         }
@@ -124,54 +124,204 @@ function Employee() {
         alert("An error occurred while deleting employee");
       });
   };
+  const [timeupdate , setTimeUpdate] = useState(false);
 
+  const toggleUpdate = () =>{
+    setTimeUpdate(prev=> !prev)
+  };
+  const [employeeCount, setEmployeeCount] = useState();
+  useEffect(() => {
+    axios.get('http://localhost:8081/employeeCount')
+      .then(res => {
+        setEmployeeCount(res.data[0].employee)
+      }).catch(err => console.log(err));
+  }, []);
+
+  const [details, setDetails] = useState(false);
+  const [ employee, setEmployee] = useState(null);
+
+  const DetailsShown = (employee) => {
+    setEmployee(employee);
+    setDetails(prev=> !prev);
+  };
+
+  
   return (
     <div className="backgb">
       {isLoading ? (
         <Loader />
       ) : (
         <div>
- <nav className="navbar navbar-expand-lg navbar-light">
-                <div className="collapse navbar-collapse" id="navbarSupportedContent">
-                  <ul className="navbar-nav mr-auto">
-      
-                    <li className="nav-item">
-                      <Link className="nav-link"to={`/dashboard/${email}`}>
-                        Dashboard
-                      </Link>
+                         <div className='db-header'> 
+                <div className='db-top'>
+                    <h2>A2Cloud</h2>
+                </div>
+                <div className='dp-top-img'>
+                <img src={`http://localhost:8081/images/` + manager.image}  className="logoff-image"/>
+ 
+                </div>
+                <div className='Nav-bar-header'> 
+                 <ul className='head-content-ul'>
+                    <li  className='head-content-li'>
+                        <img src='/assets/images/dashboard-navbar.png' className='db-dash' alt='db-db'/>
+                        <Link  to={`/Manager-dashboard/${email}`}>
+                    Dashboard
+                  </Link>
                     </li>
-                    <li className="nav-item">
-                      <Link className="nav-link"  to={`/CRUD-employee/${email}`}>
-                       Manage Employee
-                      </Link>
+                    <li className='head-content-li'>
+                    <img src='/assets/images/nav-bar-employee.png' className='db-dash1' alt='db-emp'/>
+                    <Link  to={`/CRUD-employee/${email}`}>
+                   Employees
+                  </Link>
                     </li>
-                    <li className="nav-item">
-                      <Link className="nav-link">Events</Link>
+                    <li className='head-content-li'>
+                    <img src='/assets/images/calendar-navbar.png' className='db-dash' alt='db-emp'/>
+                    <Link to={`/Calendar/${email}`}>
+                      Calendar
+                    </Link>
                     </li>
-                    <li className="nav-item">
-                      <Link className="nav-link">Calendar</Link>
-                    </li>
-                    <li className="nav-item">
-                      <Link className="nav-link" to={`/profile/${email}`}>
-                        Profile
-                      </Link>
-                    </li>
-                    <li className="nav-item">
-                  <Link className="nav-link" to="/Time-Sheet-Employee">
+                    <li className='head-content-li'>
+                    <img src='/assets/images/time-sheet-navbar.png' className='db-dash' alt='db-emp'/>
+                    <Link className="nav-link" to={`/EmployeesTimeSheet/${email}`}>
                     Time Sheet
                   </Link>
-                </li>
-                    <li className="nav-item3">
-                      <button className="nav-link" onClick={handleLogout}>
-                        Logout
-                      </button>
                     </li>
-                  </ul>
+                    <li className='head-content-li'>
+                    <img src='/assets/images/nav-bar-profile.png' className='db-dash1' alt='db-emp'/>
+                    <Link  to={`/profile/${email}`}>
+                    Profile
+                  </Link>
+                    </li>
+                    <li className='head-content-li' onClick={toggleUpdate}>
+                    <img src='/assets/images/logout-navbar.png' className='db-dash' alt='db-emp'/>
+                        Logout
+                    </li>
+                 </ul>
+               </div>
+               {timeupdate && (
+        <div className="edit-time">
+             
+             <div className="Log-off">
+             <img src="/assets/images/66847.png" alt="remove" className="cancel-togle" onClick={toggleUpdate}  />
+               <div className="left-toggle">
+               <img src={`http://localhost:8081/images/` + manager.image}  className="off-image"/>
+             <h4>{manager.name}</h4>
+             <p>{manager.email}</p>
+               </div>
+               <div className="right-toggle">
+            <img src="/assets/images/out.jpg" alt="image missing" className="out-img" onClick={handleLogout} />
+               </div>
+     
+             </div>
+         </div>
+               )}
+               </div>
+               <div className='db-content'>
+                <div className='content-title'>
+                 <p>Home / Employees</p>
+                 <h5>Employees</h5>
+             </div>
+             <div className="employe-contnt">
+              <div className="left-emp-cnt">
+             <p>{employeeCount}  People</p>
+              </div>
+              <div className="right-emp-cnt">
+              <img src="/assets/images/format.png" alt="add-image" className="format" />
+           <Link  to={"/Add-Employee/" + encodeURIComponent(manager.email)}><img src="/assets/images/addpeople.png" alt="add-image" className="add-people" /></Link>
+              </div>
+             </div>
+             </div>
+             {details && employee && (
+  <div className="details">
+    <img src="/assets/images/66847.png" alt="remove" className="cancel-togle" onClick={DetailsShown}  />
+    <div className="pro-prfile">
+              <div className="border-shadow1">
+                <img
+                  src={`http://localhost:8081/images/` + employee.image}
+                  alt="/assets/images/people-miss.png"
+                  className="pro-picbyeemployee"
+                />
+              </div>
+            </div>
+            <div className="left-profile1">
+  
+              <label>Name</label>
+              <strong>
+                {" "}
+                <p>{employee.name}</p>
+              </strong>
+              <label>Address</label>
+              <strong>
+                {" "}
+                <p>{employee.address}</p>
+              </strong>
+              <label>Email</label>
+              <strong>
+                {" "}
+                <p>{employee.email}</p>
+              </strong>
+              <label>Title</label>
+              <strong>
+                {" "}
+                <p>{employee.role}</p>
+              </strong>
+            </div>
+            <div className="Right-profile">
+              <label>DOB</label>
+              <strong>
+                {" "}
+                <p>{employee.dob}</p>
+              </strong>
+              <label>Mobile Number</label>
+              <strong>
+                {" "}
+                <p>{employee.mobile}</p>
+              </strong>
+              <label>Higher Education</label>
+              <strong>
+                {" "}
+                <p>{employee.education}</p>
+              </strong>
+            </div>
+  <div className="handle-btn">
+    <Link to={"/AssignTask/" + encodeURIComponent(employee.email)} ><button className="Assign">Assign Task</button> </Link>
+    <Link to={"/Edit-Employee/" + encodeURIComponent(employee.email)} ><button className="btnn">Edit</button> </Link>
+    <button className="btnn1" onClick={(e)=> handleDelete(employee.email)}>Delete</button> 
+    </div>
+  </div>
+)}
+<div className="upt-employee-list">
+  <div className="employee-container">
+  {data1.map((employee, index) => {
+              return (
+                <div key={index} className="employee-card">
+                  <div className="ListingAllEmployee">
+                  <img src="/assets/images/info.jpg" alt="miss" className="info-tag"  onClick={() => DetailsShown(employee)}/>
+                    <div className="employee">
+                  
+                        <img
+                          src={`http://localhost:8081/images/` + employee.image}
+                          alt="Profile Missing"
+                          className="listing-image"
+                        />
+                        
+                        <h5>{employee.name}</h5>
+                        <h6>{employee.role}</h6>
+                       <p>{employee.email}</p>
+                      
+                  </div>
+                  </div>
                 </div>
-              </nav>
-      
+              );
+            })}
+          
+  </div>
 
-                <div className="adjust">
+
+
+</div>
+
+                {/* <div className="adjust">
                   <div className="d-flex flex-column align-items-center pt-4">
                     <form
                       className="row g-3 w-50"
@@ -309,11 +459,11 @@ function Employee() {
                     </form>
                   </div>
                 </div>
-          
+           */}
      
   
 
-          <div className="emloyee-list">
+          {/* <div className="emloyee-list">
             <h3>Employee List.</h3>
             <div className="top-search">
               <p>
@@ -398,7 +548,7 @@ function Employee() {
                 </div>
               );
             })}
-          </div>
+          </div> */}
         </div>
       )}
     </div>

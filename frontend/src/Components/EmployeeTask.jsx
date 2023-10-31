@@ -3,6 +3,8 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import Loader from "./Loader";
+import StatusIndicator from './StatusIndicator';
+import { useLoginStatus } from './LoginContext';
 function EmployeeTask() {
   const { email } = useParams();
   const params = useParams();
@@ -59,36 +61,78 @@ const [data, setData] = useState({
     description: "",
     status:"",
 });
+const [timeupdate , setTimeUpdate] = useState(false);
+
+const toggleUpdate = () =>{
+  setTimeUpdate(prev=> !prev)
+};
+const { isLoggedIn, login, logout } = useLoginStatus();
   return (
     <div>
       {isLoading ? (
         <Loader />
       ):(
-      <div className="whole-task">
-              <nav className="navbar navbar-expand-lg navbar-light">
-        <div className="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul className="navbar-nav mr-auto">
-            <li className="nav-item">
-              <Link className="nav-link" to={`/Employee-dashboard/${email}`}>Dashboard</Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link"  to={`/Task-Project/${email}`}>Task & Projects</Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link">Events</Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link">Calendar</Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to={`/Employee-profile/${email}`}>Profile</Link>
-            </li>
-            <li className="nav-item1">
-              <button className="nav-link"  onClick={handleLogout}>Logout</button>
-            </li>
-          </ul>
-        </div>
-      </nav>
+      <div>
+                         <div className='db-header'>
+              <div className='db-top'>
+                <h2>A2Cloud</h2>
+
+              </div>
+              <div className='dp-top-img'>
+              <StatusIndicator isLoggedIn={isLoggedIn} />
+                <img src={`http://localhost:8081/images/` + employee.image} className="logoff-image" />
+
+              </div>
+              <div className='Nav-bar-header'>
+                <ul className='head-content-ul'>
+                  <li className='head-content-li'>
+                    <img src='/assets/images/dashboard-navbar.png' className='db-dash' alt='db-db' />
+                    <Link to={`/Employee-dashboard/${email}`}>
+                      Dashboard
+                    </Link>
+                  </li>
+                  <li className='head-content-li'>
+                    <img src='/assets/images/nav-bar-employee.png' className='db-dash1' alt='db-emp' />
+                    <Link to={`/Task-Project/${email}`}>
+                      Task & Projects
+                    </Link>
+                  </li>
+                  <li className='head-content-li'>
+                    <img src='/assets/images/calendar-navbar.png' className='db-dash' alt='db-emp' />
+                    <Link to={`/employee-calendar/${email}`}>
+                      Calendar
+                    </Link>
+                  </li>
+                  <li className='head-content-li'>
+                    <img src='/assets/images/nav-bar-profile.png' className='db-dash1' alt='db-emp' />
+                    <Link to={`/Employee-profile/${email}`}>
+                      Profile
+                    </Link>
+                  </li>
+                  <li className='head-content-li' onClick={toggleUpdate}>
+                    <img src='/assets/images/logout-navbar.png' className='db-dash' alt='db-emp' />
+                    Logout
+                  </li>
+                </ul>
+              </div>
+              {timeupdate && (
+                <div className="edit-time">
+
+                  <div className="Log-off">
+                    <img src="/assets/images/66847.png" alt="remove" className="cancel-togle" onClick={toggleUpdate} />
+                    <div className="left-toggle">
+                      <img src={`http://localhost:8081/images/` + employee.image} className="off-image" />
+                      <h4>{employee.name}</h4>
+                      <p>{employee.email}</p>
+                    </div>
+                    <div className="right-toggle">
+                      <img src="/assets/images/out.jpg" alt="image missing" className="out-img" onClick={handleLogout} />
+                    </div>
+
+                  </div>
+                </div>
+              )}
+            </div>
       <div className="Task-submit"> 
            <div className="Left-tasksubmit">
             <h2>Task Submission</h2>

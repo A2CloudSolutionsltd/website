@@ -6,18 +6,15 @@ import Timer from "./Timer";
 import 'react-toastify/dist/ReactToastify.css';
 import { toast, ToastContainer } from 'react-toastify';
 import Footerpart from "./Footerpart";
+import Clock from "./Clock";
+import { useLoginStatus } from './LoginContext';
+import StatusIndicator from './StatusIndicator';
+
 function Empdashboard() {
 
-  const notify = () => {
-    toast(employee.status, {
-      position: toast.POSITION.TOP_CENTER
-    });
-  }
-  const notify1 = () =>{
-    toast(employee.timeupdate,{
-      position:toast.POSITION.TOP_CENTER
-    })
-  }
+  const { isLoggedIn, login, logout } = useLoginStatus();
+
+
   const navigate = useNavigate();
   const { email } = useParams();
   const [employee, setEmployee] = useState({});
@@ -37,9 +34,9 @@ function Empdashboard() {
       });
   }, []);
   axios.get('http://localhost:8081/employeeCount')
-  .then(res => {
-    setEmployeeCount(res.data[0].employee)
-  }).catch(err => console.log(err));
+    .then(res => {
+      setEmployeeCount(res.data[0].employee)
+    }).catch(err => console.log(err));
   const handleLogout = () => {
     axios
       .get("http://localhost:8081/logout")
@@ -62,12 +59,12 @@ function Empdashboard() {
       .catch((err) => console.log(err));
   }, [email]);
 
-  const [isLoading , setIsLoading] = useState(true);
-  useEffect(()=>{
-    const loadingTimeout = setTimeout(()=>{
+  const [isLoading, setIsLoading] = useState(true);
+  useEffect(() => {
+    const loadingTimeout = setTimeout(() => {
       setIsLoading(false)
-    },1500)
-    return() =>{
+    }, 1500)
+    return () => {
       clearTimeout(loadingTimeout)
     }
   })
@@ -77,22 +74,22 @@ function Empdashboard() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setStatusVisible(false);
-    },  120000);
+    }, 120000);
 
     return () => {
       clearTimeout(timer);
-      setStatusVisible(true); 
+      setStatusVisible(true);
     };
   }, [employee.status])
 
   const [seconds, setSeconds] = useState(0);
   const [workingMessageVisible, setWorkingMessageVisible] = useState(false);
 
-  
 
-  
 
-  
+
+
+
   const handleLogintime = () => {
     const getCurrentTime = () => {
       const now = new Date();
@@ -101,15 +98,14 @@ function Empdashboard() {
 
       return `${hours}:${minutes}`;
     };
-    
     const loginTime = getCurrentTime();
-    
-  
-    axios.post(`http://localhost:8081/login/${email}`, {loginTime})
+
+    axios.post(`http://localhost:8081/login`, { email, loginTime })
       .then((res) => {
         if (res.data.Status === "Success") {
           console.log("Login time recorded successfully.");
-          setWorkingMessageVisible(true);
+          // setWorkingMessageVisible(true);
+          login();
         } else {
           console.error("Error recording login time.");
         }
@@ -118,7 +114,7 @@ function Empdashboard() {
         console.error("Error:", err);
       });
   };
-  
+
   const handleLogoutTime = () => {
     const getCurrentTime = () => {
       const now = new Date();
@@ -127,26 +123,38 @@ function Empdashboard() {
 
       return `${hours}:${minutes}`;
     };
-    
     const logoutTime = getCurrentTime();
 
-    const totalHours = seconds / 3600;
-  
-    axios
-      .post(`http://localhost:8081/logout/${email}`, {logoutTime,totalHours})
+    const loginTime = localStorage.getItem('loginTime'); // Get login time from localStorage
+
+    // Parse login and logout times into Date objects
+    const loginDate = new Date(`2000-01-01T${loginTime}`);
+    const logoutDate = new Date(`2000-01-01T${logoutTime}`);
+
+    // Calculate time difference in milliseconds
+    const timeDifference = logoutDate - loginDate;
+
+    // Convert time difference to hours
+    const totalHours = timeDifference / (1000 * 60 * 60);
+
+    axios.post(`http://localhost:8081/logout`, { email, logoutTime, totalHours })
       .then((res) => {
         if (res.data.Status === "Success") {
-          console.log("Logout time and total hours recorded successfully.");
+          console.log("Logout time recorded successfully.");
           setWorkingMessageVisible(false);
+          logout();
         } else {
-          console.error("Error recording logout time and total hours.");
+          console.error("Error recording logout time.");
         }
       })
       .catch((err) => {
         console.error("Error:", err);
       });
   };
-  
+
+
+
+
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -161,9 +169,9 @@ function Empdashboard() {
       })
       .catch((err) => console.log(err));
   }, []);
-  
+
   const userTeam = { team: employee.team };
-  
+
   const getTeam = () => {
     if (userTeam.team) {
       const teamMembers = data.filter(employee => employee.team === userTeam.team);
@@ -171,12 +179,16 @@ function Empdashboard() {
     }
     return [];
   };
-  
-  const teamMembers = getTeam();
-  const [timeupdate , setTimeUpdate] = useState(false);
 
-  const toggleUpdate = () =>{
-    setTimeUpdate(prev=> !prev)
+  const teamMembers = getTeam();
+  const [timeupdate, setTimeUpdate] = useState(false);
+  const [timeupdate1, setTimeUpdate1] = useState(false);
+
+  const toggleUpdate = () => {
+    setTimeUpdate(prev => !prev)
+  };
+  const toggleUpdate1 = () => {
+    setTimeUpdate1(prev => !prev)
   };
   const [values, setValues] = useState({
     newlogin: "",
@@ -194,163 +206,275 @@ function Empdashboard() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
-    axios.put(`http://localhost:8081/time/${email}`, values)
-      .then((res) => {
-        if (res.data.success) {
-          alert("Data Submitted");
-        } else {
-          alert("Failed to Submit");
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-        alert("Error submitting data");
-      })
+  
+    axios.put("http://localhost:8081/time", {
+      email: email, 
+      newlogin: values.newlogin,
+      newlogout: values.newlogout,
+      Ddescription: values.Ddescription
+    })  
+    .then((res) => {
+      if (res.data.success) {
+        alert("Data Submitted");
+      } else {
+        alert("Failed to Submit");
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      alert("Error submitting data");
+    });
   }
+  
+  
+
+  const [events, setEvents] = useState([]);
+
+  useEffect(() => {
+    axios.get(`http://localhost:8081/Events`)
+      .then((res) => {
+        setEvents(res.data);
+      })
+      .catch((err) => console.error(err));
+  }, []);
+
+  const [manager1, setManager1] = useState([]);
+  useEffect(() => {
+    axios.get(`http://localhost:8081/managerlist`)
+      .then((res) => {
+        setManager1(res.data);
+      })
+      .catch((err) => console.error(err));
+  }, []);
   return (
     <div>
       {isLoading ? (
         <Loader />
-      ): (
-      <div className="bg-dashboard">
+      ) : (
+        <div>
+          <div>
+            <div className='db-header'>
+              <div className='db-top'>
+                <h2>A2Cloud</h2>
+
+              </div>
+              <div className='dp-top-img'>
+                <StatusIndicator isLoggedIn={isLoggedIn} />
+                <img src={`http://localhost:8081/images/` + employee.image} className="logoff-image" />
+
+              </div>
+              <div className='Nav-bar-header'>
+                <ul className='head-content-ul'>
+                  <li className='head-content-li'>
+                    <img src='/assets/images/dashboard-navbar.png' className='db-dash' alt='db-db' />
+                    <Link to={`/Employee-dashboard/${email}`}>
+                      Dashboard
+                    </Link>
+                  </li>
+                  <li className='head-content-li'>
+                    <img src='/assets/images/nav-bar-employee.png' className='db-dash1' alt='db-emp' />
+                    <Link to={`/Task-Project/${email}`}>
+                      Task & Projects
+                    </Link>
+                  </li>
+                  <li className='head-content-li'>
+                    <img src='/assets/images/calendar-navbar.png' className='db-dash' alt='db-emp' />
+                    <Link to={`/employee-calendar/${email}`}>
+                      Calendar
+                    </Link>
+                  </li>
+                  <li className='head-content-li'>
+                    <img src='/assets/images/nav-bar-profile.png' className='db-dash1' alt='db-emp' />
+                    <Link to={`/Employee-profile/${email}`}>
+                      Profile
+                    </Link>
+                  </li>
+                  <li className='head-content-li' onClick={toggleUpdate}>
+                    <img src='/assets/images/logout-navbar.png' className='db-dash' alt='db-emp' />
+                    Logout
+                  </li>
+                </ul>
+              </div>
+              {timeupdate && (
+                <div className="edit-time">
+
+                  <div className="Log-off">
+                    <img src="/assets/images/66847.png" alt="remove" className="cancel-togle" onClick={toggleUpdate} />
+                    <div className="left-toggle">
+                      <img src={`http://localhost:8081/images/` + employee.image} className="off-image" />
+                      <h4>{employee.name}</h4>
+                      <p>{employee.email}</p>
+                    </div>
+                    <div className="right-toggle">
+                      <img src="/assets/images/out.jpg" alt="image missing" className="out-img" onClick={handleLogout} />
+                    </div>
+
+                  </div>
+                </div>
+              )}
+            </div>
+            <div className="profile-cont">
+              <div className='db-content'>
+                <div className='content-title'>
+                  <p>Home / Dashboard</p>
+                  <h5>Employee Dashboard</h5>
+                </div>
+
+                <div className="LeaveandCount">
+                  <div className='content-title1'>
+                    <p> <Clock /></p>
+                  </div>
+                  <div className="leave">
+                    <div class="image-container">
+                      <img src="/assets/images/timechange.webp" alt="Time Change Image" class="change-time" />
+                      <div class="text-overlay" onClick={toggleUpdate1}>Edit Time</div>
+                    </div>
+                    {timeupdate1 && (
+                      <div className="timeupdate">
+                        <img src="/assets/images/66847.png" alt="remove" className="cancel-togle" onClick={toggleUpdate1} />
+                        <form onSubmit={handleSubmit}>
+                          <h6>UpdateTime</h6>
+                          <div className="start-time">
+                            <label>Start Time</label>
+                            <input type="time" name="newlogin" onChange={handleChange} value={values.newlogin} />
+                          </div>
+                          <div className="endtime">
+                            <label>End Time</label>
+                            <input type="time" name="newlogout" onChange={handleChange} value={values.newlogout} />
+                          </div>
+
+                          <textarea placeholder="Reason" name="Ddescription" onChange={handleChange} value={values.Ddescription} />
+                          <button type="submit" className="time-update reason">Submit</button>
+                        </form>
+                      </div>
+                    )}
+                    <button className="in" onClick={handleLogintime}>
+                      <img src="/assets/images/login.png" className="log" alt="error" />
+                      <p>Login</p>
+                    </button>
+                    <button className="out" onClick={handleLogoutTime}>
+                      <img src="/assets/images/logout.png" className="log" alt="error" />
+                      <p>Logout</p>
+                    </button>
+                  </div>
+                  <div className="leave">
+                    <h5>Task</h5>
+                    <img src="/assets/images/task1new.png" alt="Employee-count" className="Countimage" />
+                    <p>{employee.projecttitle}</p>
+                  </div>
+                </div>
+
+
+              </div>
+              <div className='db-content'>
+
+
+
+                <div className='manager-profile-display'>
+                  <img src={`http://localhost:8081/images/` + employee.image} className="prodi-image" />
+
+                  <h4>{employee.name}</h4>
+                  <p>{employee.email}</p>
+                  <div className='page-list'>
+                    <div className='line'>
+                      <Link to={`/Task-Project/${email}`}>
+                        Task & Projects
+                      </Link>
+                    </div>
+                    <div className='line'>
+                      <Link to={`/ApplyLeave/${email}`}>
+                        Apply Leave
+                      </Link>
+                    </div>
+                    <div className='line'>
+                      <Link to={`/employee-calendar/${email}`}>
+                        Calendar
+                      </Link>
+                    </div>
+                    <div className='line'>
+                      <Link to={`/Employee-profile/${email}`}>
+                        Profile
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="team-list">
+                  <h5 > {employee.team}</h5>
+
+                  {teamMembers.map((member, index) => (
+                    <div key={index} className="teammembers">
+                      <div className="spe-te">
+                        <div className="teamlist-left">
+                          <img src={`http://localhost:8081/images/` + member.image} className="rounded-profile2" />
+                        </div>
+                        <div className="teamlist-right">
+                          <p>{member.name}</p>
+                        </div>
+                      </div>
+
+                    </div>
+                  ))}
+
+                </div>
+
+                <div className="bg-event">
+                  <h4>User's</h4>
+                  {manager1.map((manager, index) => (
+                    <div key={index} className="event-display">
+
+                      <div className="list-left-img">
+                        <img src={`http://localhost:8081/images/` + manager.image} className="rounded-profile2" />
+                      </div>
+                      <div className="list-right">
+
+                        <h5>{manager.name}<span>(Manager)</span></h5>
+                        <p>{manager.email}</p>
+                      </div>
+                    </div>
+                  ))}
+                  {data.map((employee, index) => (
+                    <div key={index} className="event-display">
+
+                      <div className="list-left-img">
+                        <img src={`http://localhost:8081/images/` + employee.image} className="rounded-profile2" />
+                      </div>
+                      <div className="list-right">
+
+                        <h5>{employee.name}</h5>
+                        <p>{employee.email}</p>
+                      </div>
+                    </div>
+                  ))}
+
+                </div>
+                <div className="bg-event">
+                  <h4>Upcoming Events</h4>
+                  {events.map((event, index) => (
+                    <div key={index} className="event-display">
+
+                      <div className="event-left">
+                        <p>{event.eventName} </p>
+                      </div>
+                      <div className="event-right">
+                        <p>{event.eventStart}</p>
+                      </div>
+                    </div>
+                  ))}
+
+                </div>
+
+
+              </div>
               <div>
-        <nav className="navbar navbar-expand-lg navbar-light">
-          <div className="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul className="navbar-nav mr-auto">
+
+              </div>
 
 
-              <li className="nav-item">
-                <Link className="nav-link" to={`/Employee-dashboard/${email}`}>
-                  Dashboard
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to={`/Task-Project/${email}`}>
-                  Task & Projects
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link">Events</Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link">Calendar</Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to={`/Employee-profile/${email}`}>
-                  Profile
-                </Link>
-              </li>
-              <li className="nav-item1">
-                <button className="nav-link" onClick={handleLogout}>
-                  Logout
-                </button>
-              </li>
-            </ul>
+            </div>
+
           </div>
-        </nav>
-        <div className="profile-cont">
-          <div className="nameimg"> 
-          <div className="rounded-profile1">
-         
-            <img
-              src={`http://localhost:8081/images/` + employee.image}
-              alt="Upload Image"
-              className="nav-image"
-            />
-            
-          </div>
-          <p> <strong>Welcome {employee.name}</strong></p>
-          <p>{employee.email}</p>
-         
-</div>
-          <div className="LeaveandCount">
-          <div className="count">
-            <h5>Employee Count</h5>
-              <img src="/assets/images/count.jpg" alt="Employee-count" className="Countimage" />
-              <p>{employeeCount}</p>
-          </div>
-          <div className="leave">
-            <img src="/assets/images/timechange.webp" alt="Image missing" className="timechange" onClick={e => notify1()}/>
-          <button className="in" onClick={handleLogintime} ><img src="/assets/images/login.png" className="log" alt="error" /></button>
-  <button className="out" onClick={handleLogoutTime} ><img src="/assets/images/logout.png" className="log" alt="error" /></button>
-  {workingMessageVisible && 
-  <div className="wrk-app">
-    <div className="p-time">
-    <p>Working <Timer seconds={seconds} /></p>
-    </div><div className="edit-time">
-    <i className="fs-4 bi-pencil-square" onClick={toggleUpdate}></i>
-      {timeupdate && (
-        <div className="timeupdate">
-          <form onSubmit={handleSubmit}>
-          <h6>Update Time</h6>
-          <div className="start-time">
-            <label>Start Time</label>
-            <input type="time" name="newlogin" onChange={handleChange} value={values.newlogin} />
-          </div>
-          <div className="endtime">
-            <label>End Time</label>
-            <input type="time" name="newlogout" onChange={handleChange} value={values.newlogout}/>
-          </div>
-          <textarea placeholder="Reason" name="Ddescription" onChange={handleChange} value={values.Ddescription}/>
-          <button type="submit" className="time-update reason">Submit</button>
-          </form>
         </div>
-      )}
-    </div>
-  </div>}
-          </div>
-          <div className="leave">
-            <h5>Task</h5>
-          <img src="/assets/images/task1new.png" alt="Employee-count" className="Countimage" />
-          <p>{employee.projecttitle}</p>
-          </div>
-          </div>
-          <div className="leave-seg">
-          <div className="leave-status">
-    <Link to={`/ApplyLeave/${email}`}>
-      <button className="btn-leave-req">
-        <img src="/assets/images/applyleave.png" alt="leave-req" className="leave-req" />
-        Apply Leave
-      </button>
-    </Link>
-    <br />
-   <button className="status-btn" onClick={e=> notify()}><img  src="/assets/images/checkk.jpg" alt="check miss" className="statusimg"/></button>
-    {/* {statusVisible && (
-      <p className={employee.status === 'Approved' ? 'approved' : 'rejected'}>
-        <strong>{employee.status}</strong>
-      </p>
-    )} */}
-  </div>
-
-  <div className="team-list">
-<h5 >My Team, {employee.team}</h5>
-
-    {teamMembers.map((member, index) => (
-      <div key={index} className="teammembers">
-        <div className="spe-te">
-        <div className="teamlist-left">
-        <img src={`http://localhost:8081/images/` + member.image}  className="rounded-profile2"/>
-        </div>
-       <div className="teamlist-right">
-       <p>{member.name}</p>
-       </div>
-       </div>
-       
-      </div>
-    ))}
-
-  </div>
-          </div>
-                        
-         <div>
-<Footerpart />
-         </div>
-          
-        </div>
-
-      </div>
-      </div>
       )}
 
     </div>

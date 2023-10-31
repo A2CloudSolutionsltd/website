@@ -4,6 +4,8 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import Loader from "./Loader";
 import Footerpart from "./Footerpart";
+import StatusIndicator from './StatusIndicator';
+import { useLoginStatus } from './LoginContext';
 
 function EmpProfile() {
   const handleLogout = () => {
@@ -40,46 +42,101 @@ function EmpProfile() {
     clearTimeout(loadingTimeout)
    }
   })
+  const [timeupdate , setTimeUpdate] = useState(false);
+
+  const toggleUpdate = () =>{
+    setTimeUpdate(prev=> !prev)
+  };
+
+  const { isLoggedIn, login, logout } = useLoginStatus();
   return (
     <div>
       {isLoading ? (
         <Loader />
       ):(
 <div>
-<div className="bg-content1">
-        <nav className="navbar navbar-expand-lg navbar-light">
-          <div className="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul className="navbar-nav mr-auto">
-              <li className="nav-item">
-                <Link className="nav-link" to={`/Employee-dashboard/${email}`}>
-                  Dashboard
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to={`/Task-Project/${email}`}>
-                  Task & Projects
-                </Link>
-              </li>
-              <li className="nav-item">
-              <Link className="nav-link">Events</Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link">Calendar</Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to={`/Employee-profile/${email}`}>
-                  Profile
-                </Link>
-              </li>
-              <li className="nav-item1">
-                <button className="nav-link" onClick={handleLogout}>
-                  Logout
-                </button>
-              </li>
-            </ul>
-          </div>
-        </nav>
-        <div className="bg-content">
+<div className='db-header'> 
+                <div className='db-top'>
+                    <h2>A2Cloud</h2>
+                </div>
+                <div className='dp-top-img'>
+                <StatusIndicator isLoggedIn={isLoggedIn} />
+                <img src={`http://localhost:8081/images/` + employee.image}  className="logoff-image"/>
+ 
+                </div>
+                <div className='Nav-bar-header'> 
+                <ul className='head-content-ul'>
+                  <li className='head-content-li'>
+                    <img src='/assets/images/dashboard-navbar.png' className='db-dash' alt='db-db' />
+                    <Link to={`/Employee-dashboard/${email}`}>
+                      Dashboard
+                    </Link>
+                  </li>
+                  <li className='head-content-li'>
+                    <img src='/assets/images/nav-bar-employee.png' className='db-dash1' alt='db-emp' />
+                    <Link to={`/Task-Project/${email}`}>
+                      Task & Projects
+                    </Link>
+                  </li>
+                  <li className='head-content-li'>
+                    <img src='/assets/images/calendar-navbar.png' className='db-dash' alt='db-emp' />
+                    <Link to={`/employee-calendar/${email}`}>
+                      Calendar
+                    </Link>
+                  </li>
+                  <li className='head-content-li'>
+                    <img src='/assets/images/nav-bar-profile.png' className='db-dash1' alt='db-emp' />
+                    <Link to={`/Employee-profile/${email}`}>
+                      Profile
+                    </Link>
+                  </li>
+                  <li className='head-content-li' onClick={toggleUpdate}>
+                    <img src='/assets/images/logout-navbar.png' className='db-dash' alt='db-emp' />
+                    Logout
+                  </li>
+                </ul>
+               </div>
+               {timeupdate && (
+        <div className="edit-time">
+             
+             <div className="Log-off">
+             <img src="/assets/images/66847.png" alt="remove" className="cancel-togle" onClick={toggleUpdate}  />
+               <div className="left-toggle">
+               <img src={`http://localhost:8081/images/` + employee.image}  className="off-image"/>
+             <h4>{employee.name}</h4>
+             <p>{employee.email}</p>
+               </div>
+               <div className="right-toggle">
+            <img src="/assets/images/out.jpg" alt="image missing" className="out-img" onClick={handleLogout} />
+               </div>
+     
+             </div>
+         </div>
+               )}
+               </div>
+               <div className='db-content'>
+                <div className='content-title'>
+                 <p>Home / Profile</p>
+                 <h5>Profile</h5>
+             </div>
+
+             <div className="employe-contnt">
+              <div className="left-emp-cnt">
+          <p>Update Profile,</p>
+              </div>
+              <div className="right-emp-cnt">
+              <img src="/assets/images/format.png" alt="add-image" className="format" />
+              <Link
+                to={"/EmployeeEditOption/" + encodeURIComponent(employee.email)}
+              > <button>Edit Profile</button></Link>
+           
+              </div>
+             </div>
+
+               </div>
+
+<div>
+<div className="bg-content">
           <div className="overall-profile">
             <div className="pro-prfile">
               <div className="border-shadow1">
@@ -90,48 +147,71 @@ function EmpProfile() {
                 />
               </div>
             </div>
-            {/* <img src={`http://localhost:8081/images/`+employee.image} alt="" className='empImg'/> */}
+           
 
             <div className="left-profile">
               <h1>Profile,</h1>
-              <label>Name:</label>
+              <label>Name</label>
               <strong>
                 {" "}
                 <p>{employee.name}</p>
               </strong>
-              <label>Address:</label>
+              <label>Address</label>
               <strong>
                 {" "}
                 <p>{employee.address}</p>
               </strong>
-              <label>Email:</label>
+              <label>Email</label>
               <strong>
                 {" "}
                 <p>{employee.email}</p>
               </strong>
-              <label>Title:</label>
+              <label>Title</label>
               <strong>
                 {" "}
                 <p>{employee.role}</p>
               </strong>
+              <label>Gender</label>
+              <strong>
+                {" "}
+                <p>{employee.gender}</p>
+              </strong>
+              <label>LinkedIn</label>
+              <strong>
+                {" "}
+                <p>
+  <a href={employee.linkedin} target="_blank" rel="noopener noreferrer">
+    {employee.linkedin}
+  </a>
+</p>
+              </strong>
             </div>
             <div className="Right-profile">
-              <label>DOB:</label>
+              <label>DOB</label>
               <strong>
                 {" "}
                 <p>{employee.dob}</p>
               </strong>
-              <label>Mobile Number :</label>
+              <label>Mobile Number</label>
               <strong>
                 {" "}
                 <p>{employee.mobile}</p>
               </strong>
-              <label>Higher Education:</label>
+              <label>Higher Education</label>
               <strong>
                 {" "}
                 <p>{employee.education}</p>
               </strong>
-
+              <label>Nationality</label>
+              <strong>
+                {" "}
+                <p>{employee.nationality}</p>
+              </strong>
+              <label>Marital Status</label>
+              <strong>
+                {" "}
+                <p>{employee.maritalstatus}</p>
+              </strong>
               <Link
                 to={"/EmployeeEditOption/" + encodeURIComponent(employee.email)}
               >
@@ -143,12 +223,10 @@ function EmpProfile() {
             </div>
           </div>  
         </div>
-      </div>
-      <Footerpart />
 </div>
 
+        </div>
       )}
-    
     </div>
   );
 }

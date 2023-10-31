@@ -26,11 +26,20 @@ import TaskSubmit from './Components/TaskSubmit';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Timesheet from './Components/Timesheet';
+import Event from './Components/Event';
+import Calendar from './Components/Calendar';
+import ManagerDashboard from './Components/ManagerDashboard';
+import AddEmployee from './Components/AddEmployee';
+import Timer from './Components/Timer';
+import EmpCalendar from './Components/EmpCalendar';
+import EmployeeTimesheet from './Components/EmployeeTimesheet';
+import { LoginProvider } from './Components/LoginContext';
 
 function App() {
   
   return (
     <div className="App">
+      <LoginProvider>
   <Router>
     <Routes>
       <Route path="/Login" element={<SignIn />} />
@@ -46,16 +55,22 @@ function App() {
       <Route path='/EmployeeEditOption/:email' element={<EditEmployee />} />
       <Route path='/AssignTask/:email' element={<TaskfromManager />} />
       <Route path='/View-Team' element={<Teams />} />
-  
+       <Route path='/Add-Events/:email' element={<Event />} />
       <Route path='/ApplyLeave/:email' element={<ApplyLeave />} />
-      <Route path='/Employee-Leave-Request' element={<LeaveReq />} />
-      <Route path='/Add-Manager' element={<AddManager />} />
+      <Route path='/Employee-Leave-Request/:email' element={<LeaveReq />} />
+      <Route path='/Add-Manager/:email' element={<AddManager />} />
       <Route path='/Manager-Profile/:email' element={<ManagerEditProfile />} />
-      <Route path = '/Daily-task-Submit-by-employees' element={<TaskSubmit />} />
-      <Route path='/Time-Sheet-Employee' element={<Timesheet />} />
+      <Route path = '/task-Submit-by-employees/:email' element={<TaskSubmit />} />
+      <Route path='/Time-Sheet-Employee/:email' element={<Timesheet />} />
+      <Route path='/Calendar/:email' element={<Calendar />} />
+      <Route path='/Add-Employee/:email' element={<AddEmployee />} />
+      <Route path='/Manager-dashboard/:email' element={<ManagerDashboard />} />
+      <Route path='/Timer' element={<Timer />} />
+      <Route path='/employee-calendar/:email' element={<EmpCalendar />} />
+      <Route path='/EmployeesTimeSheet/:email' element={<EmployeeTimesheet />} /> 
     </Routes>
     </Router>
-
+    </LoginProvider>
     <ToastContainer />
    
     </div>
@@ -63,3 +78,5 @@ function App() {
 }
 
 export default App;
+// ClientId-> 534728716726-gu08k1df6kjsm8qg49gmasl2fl6dra8c.apps.googleusercontent.com
+// ClientSecret->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

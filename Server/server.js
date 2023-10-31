@@ -11,8 +11,6 @@ import cron from 'node-cron';
 import nodemailer from 'nodemailer';
 
 const router = Router();
-
-
 const app = express();
 app.use(cors(
     {
@@ -32,9 +30,10 @@ const con = mysql.createConnection({
     database: "signup"
 });
 
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'public/images')
+    cb(null, 'public/images');
   },
   filename: (req, file, cb) => {
     cb(null, file.fieldname + "_" + Date.now() + path.extname(file.originalname));
@@ -44,6 +43,7 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage: storage
 });
+
 con.connect(function (err) {
     if (err) {
         console.log("Error in connection");
@@ -129,6 +129,42 @@ app.get('/getEmployee', (req, res) => {
         return res.json({Status: "Success", Result: result})
     })
 })
+
+app.get('/gettimesheet', (req, res)=>{
+  const sql = "SELECT * FROM time";
+  con.query(sql , (err, result)=>{
+  if(err) return res.json({Error:"Error in getting time-records of employees"});
+  return res.json({Status:"Success", Result:result})
+  })
+})
+app.get('/logout_time', (req, res)=>{
+  const sql = "SELECT * FROM logout_records";
+  con.query(sql , (err, result)=>{
+  if(err) return res.json({Error:"Error in getting time-records of employees"});
+  return res.json({Status:"Success", Result:result})
+  })
+})
+
+app.get('/Events', (req, res)=>{
+  const sql = "SELECT * FROM event_table";
+  con.query(sql , (err, result)=>{
+    if(err){
+      return res.json({Error: "Error getting Events"});
+    }
+    return res.json(result);
+  });
+});
+
+app.get('/managerlist', (req, res)=>{
+  const sql = "SELECT * FROM users";
+  con.query(sql , (err, result)=>{
+    if(err){
+      return res.json({Error: "Error getting manager"});
+    }
+    return res.json(result);
+  });
+});
+
 app.get("/gettask", (req, res)=>{
   const sql = "SELECT * FROM task";
   con.query(sql,(err,result)=>{
@@ -189,13 +225,18 @@ app.put('/updateEmployee/:email', upload.single('image'), (req, res) => {
   const newMobile = req.body.mobile;
   const newEducation = req.body.education;
   const image = req.file.filename;
+  const maritalStatus = req.body.maritalStatus; 
+  const nationality = req.body.nationality; 
+  const linkedin = req.body.linkedin; 
+  const gender = req.body.gender; 
 
-  const sql = "UPDATE employee SET dob = ?, mobile = ?, education = ?, image = ? WHERE email = ?";
-  con.query(sql, [newDob, newMobile, newEducation, image, email], (err, result) => {
+  const sql = "UPDATE employee SET dob=?, mobile=?, education=?, image=?, maritalstatus=?, nationality=?, linkedin=?, gender=? WHERE email=?";
+  con.query(sql, [newDob, newMobile, newEducation, image, maritalStatus, nationality, linkedin, gender, email], (err, result) => {
     if (err) return res.json({ Error: "Update employee error in SQL" });
     return res.json({ Status: "Success" });
   });
 });
+
 app.put('/updateManager/:email', upload.single('image'), (req, res) => {
   const email = req.params.email;
   const newRole = req.body.role;
@@ -204,13 +245,18 @@ app.put('/updateManager/:email', upload.single('image'), (req, res) => {
   const newEducation = req.body.education;
   const image = req.file.filename;
   const newAddress = req.body.address;
+  const maritalStatus = req.body.maritalStatus; 
+  const nationality = req.body.nationality; 
+  const linkedin = req.body.linkedin; 
+  const gender = req.body.gender; 
 
-  const sql = "UPDATE users SET  role=?, address=?, dob = ?, mobile = ?, education = ?, image = ? WHERE email = ?";
-  con.query(sql, [ newRole, newAddress, newDob, newMobile,newEducation, image, email], (err, result) => {
+  const sql = "UPDATE users SET role=?, address=?, dob=?, mobile=?, education=?, image=?, maritalstatus=?, nationality=?, linkedin=?, gender=? WHERE email=?";
+  con.query(sql, [newRole, newAddress, newDob, newMobile, newEducation, image, maritalStatus, nationality, linkedin, gender, email], (err, result) => {
     if (err) return res.json({ Error: "Update employee error in SQL" });
     return res.json({ Status: "Success" });
   });
 });
+
 
 app.put('/update/:email',upload.single('image'), (req, res) => {
     const email = req.params.email;
@@ -286,7 +332,7 @@ app.put('/update/:email',upload.single('image'), (req, res) => {
     const name = req.params.name;
     const status = req.body.status;
   
-    const sql = "UPDATE employee SET taskApproval = ? WHERE name = ?";
+    const sql = "UPDATE employee SET taskapproval = ? WHERE name = ?";
     con.query(sql, [status, name], (err, result) => {
       if (err) {
 
@@ -297,20 +343,7 @@ app.put('/update/:email',upload.single('image'), (req, res) => {
     });
   });
   
-  app.put('/time/:email', (req, res) => {
-    const email = req.params.email;
-    const newlogin = req.body.newlogin;
-    const newlogout = req.body.newlogout;
-    const Ddescription = req.body.Ddescription;
-  
-    const sql = "UPDATE employee SET login = ?, logout = ?, Ddescription = ? WHERE email = ?";
-    con.query(sql, [newlogin, newlogout, Ddescription, email], (err, result) => {
-      if (err) {
-        return res.status(500).json({ error: "Internal Error" });
-      }
-      return res.json({ success: true });
-    });
-  });
+
   
   
   // app.put('/updateEmployee/:email', (req, res) => {
@@ -382,20 +415,19 @@ app.post('/create', (req, res) => {
   });
 });
  
-// app.post("/tasksubmit",(req, res)=>{
-//   const { description , status} = req.body;
-//  const email  = req.params.email;
+app.post('/Addevent',(req,res)=>{
+  const {eventName , eventStart, eventEnd , eventDescription} = req.body;
 
-//   const sql = "UPDATE  employee  SET taskDescription = ?,  taskStatus = ?  WHERE email = ?";
-//   const values = [description , status, email];
+  const sql = "INSERT INTO event_table (`eventName`, `eventStart`, `eventEnd`, `eventDescription`)VALUES (? , ? ,?, ?)";
+  const values= [eventName , eventStart , eventEnd , eventDescription];
+  con.query(sql , values, (err, result)=>{
+    if(err) {
+      return res.json({ success: false, error: "Error inserting data into database" });
+    }
+    return res.json({ success: true, status: "Success" });
+  })
+})
 
-//   con.query(sql, values,(err, result)=>{
-//     if(err){
-//        return res.json({error:"Error in Inserting"})
-//     } 
-//     return res.json({status:"Success"});
-//   });
-// });
 app.put('/tasksubmit/:email', (req, res) => {
   const description = req.body.description;   // Corrected attribute name
   const status = req.body.status;
@@ -427,14 +459,116 @@ app.post('/createmanager', (req,res)=>{
 });
 
 
+function retrieveEmployeeName(email, callback) {
+  const sql = "SELECT name FROM employee WHERE email = ?";
+  con.query(sql, [email], (err, result) => {
+    if (err) {
+      callback(err, null);
+    } else {
+      callback(null, result[0].name);
+    }
+  });
+}
 
-
-app.post('/login/:email', (req, res) => {
-  const email = req.params.email;
+app.post('/login', (req, res) => {
+  const email = req.body.email;
   const loginTime = req.body.loginTime;
+  // const logoutTime = new Date(`1970-01-01T${logoutTime}`);
+  // let totalhours;
 
-  const updateLoginTimeSql = "UPDATE employee SET login = ? WHERE email = ?";
-  con.query(updateLoginTimeSql, [loginTime, email], (err, updateResult) => {
+  // if (!isNaN(loginTime) && !isNaN(logoutTime)) {
+  //   const timeDifference = (logoutTime - loginTime) / 1000;
+  //   totalhours = timeDifference / 3600;
+  // } else {
+  //   console.error('Invalid date format for newlogin or newlogout');
+  //   return res.status(400).json({ error: 'Invalid date format' });
+  // }
+
+  retrieveEmployeeName(email, (err, name) => {
+    if (err) {
+      console.error('Error retrieving employee name:', err);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+
+    console.log('Retrieved employee name:', name);
+
+    const updateLoginTimeSql = "INSERT INTO time (`employeeName`, `employeeEmail`, `date`, `login`) VALUES (?, ?, CURDATE(), ?)";
+    con.query(updateLoginTimeSql, [name, email, loginTime], (err, updateResult) => {
+      if (err) {
+        console.error('Error updating login time:', err);
+        return res.status(500).json({ error: 'Internal Server Error' });
+      }
+      return res.json({ Status: "Success" });
+    });
+  });
+});
+
+app.put('/time', (req, res) => {
+  const email = req.body.email;
+  const newlogin = req.body.newlogin;
+  const newlogout = req.body.newlogout;
+  const Ddescription = req.body.Ddescription;
+
+  const loginTime = new Date(`1970-01-01T${newlogin}`);
+  const logoutTime = new Date(`1970-01-01T${newlogout}`);
+  let totalhours;
+
+  if (!isNaN(loginTime) && !isNaN(logoutTime)) {
+    const timeDifference = (logoutTime - loginTime) / 1000;
+    totalhours = timeDifference / 3600;
+  } else {
+    console.error('Invalid date format for newlogin or newlogout');
+    return res.status(400).json({ error: 'Invalid date format' });
+  }
+
+  retrieveEmployeeName(email, (err, name) => {
+    if (err) {
+      console.error('Error retrieving employee name:', err);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+
+    const timeSql = "INSERT INTO time (`employeeName`, `employeeEmail`, `date`, `login`, `totalhours`) VALUES (?, ?, CURDATE(), ?, ?)";
+    const logoutRecordSql = "INSERT INTO logout_records (`employeeEmail`, `date`, `logoutTime`, `Ddescription`) VALUES (?, CURDATE(), ?, ?)";
+
+    con.beginTransaction((err) => {
+      if (err) {
+        return res.status(500).json({ error: 'Internal Server Error' });
+      }
+
+      con.query(timeSql, [name, email, newlogin, totalhours], (err, result1) => {
+        if (err) {
+          return con.rollback(() => {
+            res.status(500).json({ error: 'Internal Server Error' });
+          });
+        }
+
+        con.query(logoutRecordSql, [email, newlogout, Ddescription], (err, result2) => {
+          if (err) {
+            return con.rollback(() => {
+              res.status(500).json({ error: 'Internal Server Error' });
+            });
+          }
+
+          con.commit((err) => {
+            if (err) {
+              return con.rollback(() => {
+                res.status(500).json({ error: 'Internal Server Error' });
+              });
+            }
+            return res.json({ success: true });
+          });
+        });
+      });
+    });
+  });
+});
+
+app.post('/logout', (req, res) => {
+  const email = req.body.email;
+  const logoutTime = req.body.logoutTime;
+
+  const insertLogoutRecordSql = "INSERT INTO logout_records (`employeeEmail`, `date`, `logoutTime`) VALUES (?,CURDATE(), ?)";
+  con.query(insertLogoutRecordSql, [email, logoutTime], (err, insertResult) => {
     if (err) {
       return res.status(500).json({ error: 'Internal Server Error' });
     }
@@ -442,17 +576,33 @@ app.post('/login/:email', (req, res) => {
   });
 });
 
-app.post('/logout/:email', (req, res) => {
-  const email = req.params.email;
-  const logoutTime = req.body.logoutTime;
-  const totalHours = req.body.totalHours; // Assuming you have this variable
 
-  const updateSql = "UPDATE employee SET logout = ?, totalhours = ? WHERE email = ?";
-  con.query(updateSql, [logoutTime, totalHours, email], (err, updateResult) => {
-    if(err) return res.json({ Status: "Error", Error: "Error updating logout time and total hours" });
-    return res.json({ Status: "Success" });
-  });
-});
+
+
+// app.post('/login/:email', (req, res) => {
+//   const email = req.params.email;
+//   const loginTime = req.body.loginTime;
+
+//   const updateLoginTimeSql = "UPDATE employee SET login = ? WHERE email = ?";
+//   con.query(updateLoginTimeSql, [loginTime, email], (err, updateResult) => {
+//     if (err) {
+//       return res.status(500).json({ error: 'Internal Server Error' });
+//     }
+//     return res.json({ Status: "Success" });
+//   });
+// });
+
+// app.post('/logout/:email', (req, res) => {
+//   const email = req.params.email;
+//   const logoutTime = req.body.logoutTime;
+//   const totalHours = req.body.totalHours; // Assuming you have this variable
+
+//   const updateSql = "UPDATE employee SET logout = ?, totalhours = ? WHERE email = ?";
+//   con.query(updateSql, [logoutTime, totalHours, email], (err, updateResult) => {
+//     if(err) return res.json({ Status: "Error", Error: "Error updating logout time and total hours" });
+//     return res.json({ Status: "Success" });
+//   });
+// });
 
 
 function deleteExpiredRecords() {

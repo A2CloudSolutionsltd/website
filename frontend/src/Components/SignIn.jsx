@@ -45,7 +45,7 @@ function SignIn() {
         .then((res) => {
           if (res.data.Status === "Success") {
             const email  = values.email;
-            navigate("/dashboard/"+email);
+            navigate("/Manager-dashboard/"+email);
           } else {
             setError(res.data.Error);
           }
@@ -64,7 +64,7 @@ function SignIn() {
           <div className="text-danger">{error && error}</div>
           <div className="Process-Left">
             <form onSubmit={handleSubmit} className="Signup-form">
-              <label className="signup-label">
+              <label className="signup-labelupdate">
                 Email:
                 <input
                   type="email"
@@ -79,7 +79,7 @@ function SignIn() {
                   required
                 />
               </label>
-              <label className="signup-label">
+              <label className="signup-labelupdate">
                 Password:
                 <input
                   onChange={(e) =>

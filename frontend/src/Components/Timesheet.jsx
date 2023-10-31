@@ -1,142 +1,191 @@
 import React, { useEffect, useState } from 'react'
 import Loader from './Loader';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheckSquare } from '@fortawesome/free-solid-svg-icons';
+import { Calendar } from 'react-big-calendar';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
+import moment from 'moment';
+import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
-import Footerpart from './Footerpart';
 function Timesheet() {
-    const [isLoading , setIsLoading] = useState(true);
-    useEffect(()=>{
-        const loadingTimeout = setTimeout(()=>{
-            setIsLoading(false)
-        },1500)
-        return()=>{
-        clearTimeout(loadingTimeout);
+  const { email } = useParams();
+  const [isLoading, setIsLoading] = useState(true);
+  const [manager, setManager] = useState({});
+  useEffect(() => {
+    const loadingTimeout = setTimeout(() => {
+      setIsLoading(false)
+    }, 1500)
+    return () => {
+      clearTimeout(loadingTimeout);
+    }
+  })
+  useEffect(() => {
+    axios
+      .get(`http://localhost:8081/manager/${email}`)
+      .then((res) => {
+        console.log('API Response:', res.data);
+        if (res.data && res.data.Result && res.data.Result.length > 0) {
+          setManager(res.data.Result[0]);
+        } else {
+          console.error("Manager data not found");
         }
-    })
-    const [data, setData] = useState([]);
+      })
+      .catch((err) => console.log(err));
+  }, [email]);
 
-    useEffect(() => {
-      axios
-        .get("http://localhost:8081/getEmployee")
-        .then((res) => {
-          if (res.data.Status === "Success") {
-            setData(res.data.Result);
-          } else {
-            alert("Error");
-          }
-        })
-        .catch((err) => console.log(err));
-    }, []);
-    const filteredData = data.filter(
-        (employee) =>
-          employee.Ddescription 
-      );
-      const handleStatusUpdate = async (name) => {
-        const selectedStatus = document.getElementById(`status-${name}`).value;
-    
-        try {
-          await axios.put(`http://localhost:8081/timeaproval/${name}`, {
-            status: selectedStatus,
-          });
-    
-          alert('Status updated successfully');
-        } catch (error) {
-          console.error('Error updating status:', error);
+  const [time, getTime] = useState([]);
+
+  useEffect(() => {
+    axios.get("http://localhost:8081/gettimesheet")
+      .then((res) => {
+        if (res.data.Status === "Success") {
+          getTime(res.data.Result);
+        } else {
+          alert("error getting details")
         }
-      };
+      })
+      .catch((err) => console.log(err))
+  })
+  const [formUpdate , setFormUpdate] = useState(false);
+
+  const FormUpdate =() =>{
+       setFormUpdate(prev => !prev)
+  }
   return (
     <div>
-       {isLoading ? (
-        <Loader/>
-       ):(
-        <div className='whole-sub'>
-          <div className='ApplyLeave'>
-            <div className='text-left'>
-              <h2>Time Sheet</h2>
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <div>
+          <div className='db-header'>
+            <div className='db-top'>
+              <h2>A2Cloud</h2>
             </div>
- 
-          </div>
-          <div className='task-submit-list'>
-  <table className='custom-table'>
-    <thead>
-      <tr>
-        <th className='custom-table-header'>Name</th>
-        <th className='custom-table-header'>Login</th>
-        <th className='custom-table-header'>Logout</th>
-        <th className='custom-table-header'>Hours Worked</th>
-      </tr>
-    </thead>
-    <tbody>
-      {data.map((empoyee, index) => (
-        <tr key={index}>
-          <td className='custom-table-cell'>{empoyee.name}</td>
-          <td className='custom-table-cell'>{empoyee.login}</td>
-          <td className='custom-table-cell'>{empoyee.logout}</td>
-          <td className='custom-table-cell'>{empoyee.totalhours}<strong>Hrs</strong></td>
+            <div className='dp-top-img'>
+              <img src={`http://localhost:8081/images/` + manager.image} className="logoff-image" />
 
-        </tr>
-      ))}
-    </tbody>
-  </table>
-</div>
-<div className='ApplyLeave'>
-            <div className='text-left'>
-              <h2>Time Updated Employees List</h2>
             </div>
- 
+            <div className='Nav-bar-header'>
+              <ul className='head-content-ul'>
+                <li className='head-content-li'>
+                  <img src='/assets/images/dashboard-navbar.png' className='db-dash' alt='db-db' />
+                  <Link to={`/Manager-dashboard/${email}`}>
+                    Dashboard
+                  </Link>
+                </li>
+                <li className='head-content-li'>
+                  <img src='/assets/images/nav-bar-employee.png' className='db-dash1' alt='db-emp' />
+                  <Link to={`/CRUD-employee/${email}`}>
+                    Employees
+                  </Link>
+                </li>
+                <li className='head-content-li'>
+                  <img src='/assets/images/calendar-navbar.png' className='db-dash' alt='db-emp' />
+                  <Link to={`/Calendar/${email}`}>
+                    Calendar
+                  </Link>
+                </li>
+                <li className='head-content-li'>
+                  <img src='/assets/images/time-sheet-navbar.png' className='db-dash' alt='db-emp' />
+                  <Link className="nav-link" to={`/EmployeesTimeSheet/${email}`}>
+                    Time Sheet
+                  </Link>
+                </li>
+                <li className='head-content-li'>
+                  <img src='/assets/images/nav-bar-profile.png' className='db-dash1' alt='db-emp' />
+                  <Link to={`/profile/${email}`}>
+                    Profile
+                  </Link>
+                </li>
+              </ul>
+            </div>
           </div>
-          {filteredData.length > 0 && (
-            <div className='task-submit-list'>
-              <table  className='custom-table'>
-                {/* Table Header */}
-                <thead className='Leave-head'>
-                  <tr>
-                    <th className='custom-table-header'>Name</th>
-                    <th className='custom-table-header'>New-Login</th>
-                    <th className='custom-table-header'>New-Logout</th>
-                    <th className='custom-table-header'>Hours</th>
-                    <th className='custom-table-header'>Reason</th>
- 
-                    <th className='custom-table-header'>Status</th>
-                    <th className='custom-table-header'>Update</th>
-                  </tr>
-                </thead>
-                {/* Table Body */}
-                <tbody >
-                  {filteredData.map((employee, index) => (
-                    <tr key={index}>
-                      <td className='custom-table-cell'>{employee.name}</td>
-                      <td className='custom-table-cell'>{employee.login}</td>
-                      <td className='custom-table-cell'>{employee.logout}</td>
-                      <td className='custom-table-cell'>{employee.totalhours}</td>
-                      <td className='custom-table-cell'>{employee.Ddescription}</td>
-                      <td className='custom-table-cell'>
-                        {" "}
-                        <select id={`status-${employee.name}`}>
-                          <option>Select</option>
-                          <option value='Approved'>Approved</option>
-                          <option value='Rejected'>Rejected</option>
-                        </select>
-                      </td>
-                      <td
-                        className='approve'
-                        onClick={() => handleStatusUpdate(employee.name)}
-                      >
-                        <FontAwesomeIcon icon={faCheckSquare} />
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+          <div className='db-content'>
+            <div className='content-title'>
+              <p>Home / Manager</p>
+              <h5>Time Sheet</h5>
             </div>
-          )}
- <Footerpart />
+
+            <div className="employe-contnt">
+              <div className="left-emp-cnt">
+                <p>Work Time</p>
+              </div>
+              <div className="right-emp-cnt">
+                <img src="/assets/images/format.png" alt="add-image" className="format" />
+                <button onClick={FormUpdate}>Do Action</button>
+
+              </div>
+            </div>
+
+          </div>
+          {formUpdate && (
+        <div className="edit-time">
+             
+        <div className="Event-toggle">
+          <h2>Add Event,</h2>
+          <img src='/assets/images/66847.png'  className='cancel' alt='mis' onClick={FormUpdate}/>
+          <div className="toggleevent-Left">
+            <form className='Event-form' >
+              <label>Event Name:</label>
+              <input />
+
+              <label>Start Date:</label>
+              <input type='date' />
+
+              <label>End Date:</label>
+              <input type='date'  />
+
+              <label>Description</label>
+              <textarea />
+
+              <button>Add</button>
+            </form>
+          </div>
+          
+          <div className="toggleevent-right">
+          
+            <img
+              src="/assets/images/adding.avif"
+              className="event-img"
+              alt="inner file missing"
+            />
+           
+          </div>
+        
+
+
         </div>
-       )}
-      
+    </div>
+            )}
+          <div className='display-employee-time-records'>
+            {time.map((employeeTime, index) => (
+              <div key={index} className='employee-info'>
+                <div className='name-email'>
+                <h2>{employeeTime.employeeName}</h2>
+                <p>{employeeTime.employeeEmail}</p>
+                </div>
+                
+                <div className='time-employee'>
+                  {/* <Calendar
+                    localizer={localizer}
+                    startAccessor="start"
+                    endAccessor="end"
+                    views={['week']}
+                    defaultView="week"
+                    step={60}
+                    timeslots={1}
+                  /> */}
+                </div>
+              </div>
+            ))}
+          </div>
+
+
+
+        </div>
+      )}
+
     </div>
   )
 }
 
 export default Timesheet
+

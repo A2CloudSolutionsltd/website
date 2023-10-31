@@ -59,7 +59,11 @@ function Dashboard() {
       .then((res) => setManager(res.data.Result[0]))
       .catch((err) => console.log(err));
   }, [email]);
+  const [timeupdate , setTimeUpdate] = useState(false);
 
+  const toggleUpdate = () =>{
+    setTimeUpdate(prev=> !prev)
+  };
   return (
     <div>
       {isLoading ? (
@@ -96,13 +100,29 @@ function Dashboard() {
                   </Link>
                 </li>
                 <li className="nav-item3">
-                  <button className="nav-link" onClick={handleLogout}>
+                  <button className="nav-link" onClick={toggleUpdate}>
                     Logout
                   </button>
                 </li>
               </ul>
             </div>
           </nav>
+          {timeupdate && (
+        <div className="edit-time">
+             
+             <div className="Log-off">
+               <div className="left-toggle">
+               <img src={`http://localhost:8081/images/` + manager.image}  className="logoff-image"/>
+             <h4>{manager.name}</h4>
+             <p>{manager.email}</p>
+               </div>
+               <div className="right-toggle">
+            <img src="/assets/images/out.jpg" alt="image missing" className="out-img" onClick={handleLogout} />
+               </div>
+     
+             </div>
+         </div>
+               )}
           <div className="Leave-aproval">
             <div className="LeaveandCount1">
               <div className="nameimg">
@@ -142,7 +162,6 @@ function Dashboard() {
               
             </div>
           </div>
-          <Footerpart />
         </div>
       )}
     </div>

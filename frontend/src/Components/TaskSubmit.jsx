@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckSquare } from '@fortawesome/free-solid-svg-icons';
 function TaskSubmit() {
   const { email } = useParams();
+  const [manager, setManager] = useState({});
   const params = useParams();
   const [employee, setEmployee] = useState({});
   const [isLoading, setIsLoading] = useState(true);
@@ -44,28 +45,98 @@ function TaskSubmit() {
     } catch (error) {
       console.error('Error updating status:', error);
     }
-  };
+  }
+  useEffect(() => {
+    axios
+      .get(`http://localhost:8081/manager/${email}`)
+      .then((res) => {
+        console.log('API Response:', res.data); // Log the entire response
+        if (res.data && res.data.Result && res.data.Result.length > 0) {
+          setManager(res.data.Result[0]);
+        } else {
+          console.error("Manager data not found");
+        }
+      })
+      .catch((err) => console.log(err));
+  }, [email]);
   return (
     <div>
       {isLoading ? (
         <Loader />
       ) : (
-        <div className='whole-sub'>
-          <div className='ApplyLeave'>
-            <div className='text-left'>
-              <h2>Submitted Task,</h2>
-            </div>
+        <div>
+                         <div className='db-header'> 
+                <div className='db-top'>
+                    <h2>A2Cloud</h2>
+                </div>
+                <div className='dp-top-img'>
+                <img src={`http://localhost:8081/images/` + manager.image}  className="logoff-image"/>
  
-          </div>
-          <div className='task-submit-list'>
-  <table className='custom-table'>
+                </div>
+                <div className='Nav-bar-header'> 
+                 <ul className='head-content-ul'>
+                    <li  className='head-content-li'>
+                        <img src='/assets/images/dashboard-navbar.png' className='db-dash' alt='db-db'/>
+                        <Link  to={`/Manager-dashboard/${email}`}>
+                    Dashboard
+                  </Link>
+                    </li>
+                    <li className='head-content-li'>
+                    <img src='/assets/images/nav-bar-employee.png' className='db-dash1' alt='db-emp'/>
+                    <Link  to={`/CRUD-employee/${email}`}>
+                   Employees
+                  </Link>
+                    </li>
+                    <li className='head-content-li'>
+                  <img src='/assets/images/calendar-navbar.png' className='db-dash' alt='db-emp' />
+                  <Link to={`/Calendar/${email}`}>
+                      Calendar
+                    </Link>
+                </li>
+                <li className='head-content-li'>
+                  <img src='/assets/images/time-sheet-navbar.png' className='db-dash' alt='db-emp' />
+                  <Link className="nav-link"to={`/EmployeesTimeSheet/${email}`}>
+                    Time Sheet
+                  </Link>
+                </li>
+                    <li className='head-content-li'>
+                    <img src='/assets/images/nav-bar-profile.png' className='db-dash1' alt='db-emp'/>
+                    <Link  to={`/profile/${email}`}>
+                    Profile
+                  </Link>
+                    </li>
+                 </ul>
+               </div>
+               </div>
+               <div className='db-content'>
+                <div className='content-title'>
+                 <p>Home / Manager</p>
+                 <h5>Task Submitted</h5>
+             </div>
+
+             <div className="employe-contnt">
+              <div className="left-emp-cnt">
+          <p>List !</p>
+              </div>
+              <div className="right-emp-cnt">
+              <img src="/assets/images/format.png" alt="add-image" className="format" />
+              <button>Do Action</button>
+           
+              </div>
+             </div>
+
+               </div>
+               <div>
+               <table className='custom-table'>
     <thead>
       <tr>
         <th className='custom-table-header'>Name</th>
         <th className='custom-table-header'>Title</th>
         <th className='custom-table-header'>Description</th>
-        <th className='custom-table-header'>Status</th>
-        <th className='custom-table-header'>Approval</th>
+        <th className='custom-table-header'>Employee Status</th>
+        <th className='custom-table-header'>Do Action</th>
+        <th className='custom-table-header'>Manager Status</th>
+        
       </tr>
     </thead>
     <tbody>
@@ -75,10 +146,9 @@ function TaskSubmit() {
       <tr key={index}>
         <td className='custom-table-cell'>{employee.name}</td>
         <td className='custom-table-cell'>{employee.projecttitle}</td>
-        <td className='custom-table-cell'>{employee.taskDescription}<br />
-        <strong>{employee.taskStatus}</strong>
+        <td className='custom-table-cell'>{employee.taskDescription}
         </td>
-        <td className='custom-table-cell'>{employee.taskApproval}<br /></td>
+        <td className='custom-table-cell'> {employee.taskStatus}<br /></td>
         <td className='custom-table-cell'>  
           {" "}
           <select id={`approval-${employee.name}`}>
@@ -94,6 +164,7 @@ function TaskSubmit() {
             <FontAwesomeIcon icon={faCheckSquare} />
           </td>
         </td>
+        <td className='custom-table-cell'>{employee.taskapproval}</td>
       </tr>
     ))}
 </tbody>
@@ -103,10 +174,11 @@ function TaskSubmit() {
 
 
 
-  </table>
-</div>
-
+ </table>
+               </div>
         </div>
+
+
       )}
     </div>
   )
