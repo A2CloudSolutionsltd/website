@@ -9,7 +9,6 @@ import Footerpart from "./Footerpart";
 import Clock from "./Clock";
 import { useLoginStatus } from './LoginContext';
 import StatusIndicator from './StatusIndicator';
-
 function Empdashboard() {
 
   const { isLoggedIn, login, logout } = useLoginStatus();
@@ -103,7 +102,7 @@ function Empdashboard() {
     axios.post(`http://localhost:8081/login`, { email, loginTime })
       .then((res) => {
         if (res.data.Status === "Success") {
-          console.log("Login time recorded successfully.");
+          toast.success('Login time recorded successfully.');
           // setWorkingMessageVisible(true);
           login();
         } else {
@@ -140,7 +139,7 @@ function Empdashboard() {
     axios.post(`http://localhost:8081/logout`, { email, logoutTime, totalHours })
       .then((res) => {
         if (res.data.Status === "Success") {
-          console.log("Logout time recorded successfully.");
+          toast.success('Logout time recorded successfully.');
           setWorkingMessageVisible(false);
           logout();
         } else {
@@ -246,6 +245,32 @@ function Empdashboard() {
       })
       .catch((err) => console.error(err));
   }, []);
+  const [data1, setData1] = useState([]);
+  useEffect(() => {
+    axios
+      .get(`http://localhost:8081/getleaverequestdisplay/${email}`)
+      .then((res) => {
+        if (res.data.Status === "Success") {
+          setData1(res.data.Result);
+        } else {
+          alert("Error");
+        }
+      })
+      .catch((err) => console.log(err));
+  }, [email]);
+  
+  const [formUpdate , setFormUpdate] = useState(false);
+
+  const FormUpdate =() =>{
+       setFormUpdate(prev => !prev)
+  }
+  const currentDate = new Date();
+
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
   return (
     <div>
       {isLoading ? (
@@ -264,7 +289,12 @@ function Empdashboard() {
 
               </div>
               <div className='Nav-bar-header'>
-                <ul className='head-content-ul'>
+                  <div className='menu-toggle' onClick={toggleMenu}>
+                    <div className='bar'></div>
+                    <div className='bar'></div>
+                    <div className='bar'></div>
+                  </div>
+                  <ul className={`head-content-ul ${isMenuOpen ? 'active' : ''}`}>
                   <li className='head-content-li'>
                     <img src='/assets/images/dashboard-navbar.png' className='db-dash' alt='db-db' />
                     <Link to={`/Employee-dashboard/${email}`}>
@@ -325,9 +355,9 @@ function Empdashboard() {
                     <p> <Clock /></p>
                   </div>
                   <div className="leave">
-                    <div class="image-container">
-                      <img src="/assets/images/timechange.webp" alt="Time Change Image" class="change-time" />
-                      <div class="text-overlay" onClick={toggleUpdate1}>Edit Time</div>
+                    <div className="image-container">
+                      <img src="/assets/images/timechange.webp" alt="Time Change Image" className="change-time" />
+                      <div className="text-overlay" onClick={toggleUpdate1}>Edit Time</div>
                     </div>
                     {timeupdate1 && (
                       <div className="timeupdate">
@@ -397,8 +427,55 @@ function Empdashboard() {
                       </Link>
                     </div>
                   </div>
+                  <div className="notifications">
+                    <h6>Leave Status</h6>
+                    <img src="/assets/images/notification2.jpg" alt="img miss" className="noti-img" onClick={FormUpdate} />
+                  </div>
                 </div>
-
+                {formUpdate && (
+        <div className="edit-time">
+             
+        <div className="Event-toggle">
+          <h2>Leave Records,</h2>
+          <div className="cancel-div">
+          <img src='/assets/images/66847.png'  className='cancel' alt='mis' onClick={FormUpdate}/>
+          </div>
+         
+<div className="leave-list-status">
+  <div className="leavehead">
+    <div className="leave-head-l">
+   <img src="/assets/images/leavelist.avif" className="leave-list-img" alt="imagemissing" />
+    </div>
+    <div className="leave-head-r">
+<p>Here you can review your <span>leave history</span> and check the status of your pending requests.</p>
+    </div>
+  </div>
+  <div className='leave-body'>
+  <table className='table-list-of-leave'>
+        <thead className='time-head'>
+          <tr>
+            <th className='leave-th'>Leave Type</th>
+            <th className='leave-th'>Start Date</th>
+            <th className='leave-th'>End Date</th>
+            <th className='leave-th'>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data1.map((request) => (
+            <tr key={request.id}>
+              <td className='leave-td'>{request.leavetype}</td>
+              <td className='leave-td'>{request.startdate}</td>
+              <td className='leave-td'>{request.enddate}</td>
+              <td className='leave-td'>{request.status}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+            </div>
+</div>
+        </div>
+    </div>
+            )}
                 <div className="team-list">
                   <h5 > {employee.team}</h5>
 
@@ -450,7 +527,7 @@ function Empdashboard() {
                 </div>
                 <div className="bg-event">
                   <h4>Upcoming Events</h4>
-                  {events.map((event, index) => (
+                  {events.filter(event => new Date(event.eventEnd) >= currentDate).map((event, index) => (
                     <div key={index} className="event-display">
 
                       <div className="event-left">
@@ -463,8 +540,6 @@ function Empdashboard() {
                   ))}
 
                 </div>
-
-
               </div>
               <div>
 

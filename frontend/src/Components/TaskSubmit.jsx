@@ -33,6 +33,20 @@ function TaskSubmit() {
       })
       .catch((err) => console.log(err));
   }, []);
+  const [data1, setData1] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:8081/gettask")
+      .then((res) => {
+        if (res.data.Status === "success") {
+          setData1(res.data.Result);
+        } else {
+          alert("Error");
+        }
+      })
+      .catch((err) => console.log(err));
+  }, []);
   const handleStatusUpdate = async (name) => {
     const selectedStatus = document.getElementById(`approval-${name}`).value;
 
@@ -136,45 +150,28 @@ function TaskSubmit() {
         <th className='custom-table-header'>Employee Status</th>
         <th className='custom-table-header'>Do Action</th>
         <th className='custom-table-header'>Manager Status</th>
-        
       </tr>
     </thead>
     <tbody>
-  {data
-    .filter((employee) => employee.taskDescription) 
-    .map((employee, index) => (
-      <tr key={index}>
-        <td className='custom-table-cell'>{employee.name}</td>
-        <td className='custom-table-cell'>{employee.projecttitle}</td>
-        <td className='custom-table-cell'>{employee.taskDescription}
-        </td>
-        <td className='custom-table-cell'> {employee.taskStatus}<br /></td>
-        <td className='custom-table-cell'>  
-          {" "}
-          <select id={`approval-${employee.name}`}>
-            <option>Select</option>
-            <option value='Approved'>Approved</option>
-            <option value='Rejected'>Rejected</option>
-            <option value='Pending'>Pending</option>
-          </select>
-          <td
-            className='approve1'
-            onClick={() => handleStatusUpdate(employee.name)}
-          >
-            <FontAwesomeIcon icon={faCheckSquare} />
+      {data1.map((employee, index) => (
+        <tr key={index}>
+          <td className='custom-table-cell'>{employee.employee_name}</td>
+          <td className='custom-table-cell'>{employee.project_title}</td>
+          <td className='custom-table-cell'>{employee.employee_description}</td>
+          <td className='custom-table-cell'>{employee.employee_status}</td>
+          <td className='custom-table-cell'>
+            <select >
+              <option>Select</option>
+              <option>Approve</option>
+              <option>Reject</option>
+            </select>
           </td>
-        </td>
-        <td className='custom-table-cell'>{employee.taskapproval}</td>
-      </tr>
-    ))}
-</tbody>
-
-
-
-
-
-
- </table>
+          <td className='custom-table-cell'>{employee.status}</td>
+          {/* Add more <td> elements for "Do Action" and "Manager Status" */}
+        </tr>
+      ))}
+    </tbody>
+  </table>
                </div>
         </div>
 

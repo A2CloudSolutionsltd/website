@@ -13,21 +13,21 @@ import nodemailer from 'nodemailer';
 const router = Router();
 const app = express();
 app.use(cors(
-    {
-        origin: ["http://localhost:5173"],
-        methods: ["POST", "GET", "PUT","PATCH","DELETE"],
-        credentials: true
-    }
+  {
+    origin: ["http://localhost:5173"],
+    methods: ["POST", "GET", "PUT", "PATCH", "DELETE"],
+    credentials: true
+  }
 ));
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.static('public'));
 
 const con = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "",
-    database: "signup"
+  host: "localhost",
+  user: "root",
+  password: "",
+  database: "signup"
 });
 
 
@@ -45,13 +45,22 @@ const upload = multer({
 });
 
 con.connect(function (err) {
-    if (err) {
-        console.log("Error in connection");
-    } else {
-        console.log("Connected");
-    }
+  if (err) {
+    console.log("Error in connection");
+  } else {
+    console.log("Connected");
+  }
 });
-
+function retrieveEmployeeName(email, callback) {
+  const sql = "SELECT name FROM employee WHERE email = ?";
+  con.query(sql, [email], (err, result) => {
+    if (err) {
+      callback(err, null);
+    } else {
+      callback(null, result[0].name);
+    }
+  });
+}
 // app.post('/enter', (req, res) => {
 //     const sql = "SELECT * FROM users WHERE email = ? AND password = ?"; 
 //     con.query(sql, [req.body.email, req.body.password], (err, result) => {
@@ -70,48 +79,48 @@ con.connect(function (err) {
 app.post('/enter', (req, res) => {
   const sql = "SELECT * FROM users Where email = ?";
   con.query(sql, [req.body.email], (err, result) => {
-      if(err) return res.json({Status: "Error", Error: "Error in runnig query"});
-      if(result.length > 0) {
-          bcrypt.compare(req.body.password.toString(), result[0].password, (err, response)=> {
-              if(err) return res.json({Error: "password error"});
-              if(response) {
-                const id= result[0].id;
-                            const token = jwt.sign({id}, "JWT-KEY", {expiresIn: '1d'});
-                             res.cookie('token', token);
-                             return res.json({ Status: "Success" });
-              } else {
-                  return res.json({Status: "Error", Error: "Wrong Email or Password"});
-              }
-              
-          })
-          
-      } else {
-          return res.json({Status: "Error", Error: "Wrong Email or Password"});
-      }
+    if (err) return res.json({ Status: "Error", Error: "Error in runnig query" });
+    if (result.length > 0) {
+      bcrypt.compare(req.body.password.toString(), result[0].password, (err, response) => {
+        if (err) return res.json({ Error: "password error" });
+        if (response) {
+          const id = result[0].id;
+          const token = jwt.sign({ id }, "JWT-KEY", { expiresIn: '1d' });
+          res.cookie('token', token);
+          return res.json({ Status: "Success" });
+        } else {
+          return res.json({ Status: "Error", Error: "Wrong Email or Password" });
+        }
+
+      })
+
+    } else {
+      return res.json({ Status: "Error", Error: "Wrong Email or Password" });
+    }
   })
 })
 
 app.post('/employeelogin', (req, res) => {
   const sql = "SELECT * FROM employee Where email = ?";
   con.query(sql, [req.body.email], (err, result) => {
-      if(err) return res.json({Status: "Error", Error: "Error in runnig query"});
-      if(result.length > 0) {
-          bcrypt.compare(req.body.password.toString(), result[0].password, (err, response)=> {
-              if(err) return res.json({Error: "password error"});
-              if(response) {
-                const token = jwt.sign({ role: "employee", id: result[0].id }, "jwt-secret-key");
+    if (err) return res.json({ Status: "Error", Error: "Error in runnig query" });
+    if (result.length > 0) {
+      bcrypt.compare(req.body.password.toString(), result[0].password, (err, response) => {
+        if (err) return res.json({ Error: "password error" });
+        if (response) {
+          const token = jwt.sign({ role: "employee", id: result[0].id }, "jwt-secret-key");
 
-                  res.cookie('token', token);
-                  return res.json({Status: "Success"})
-              } else {
-                  return res.json({Status: "Error", Error: "Wrong Email or Password"});
-              }
-              
-          })
-          
-      } else {
-          return res.json({Status: "Error", Error: "Wrong Email or Password"});
-      }
+          res.cookie('token', token);
+          return res.json({ Status: "Success" })
+        } else {
+          return res.json({ Status: "Error", Error: "Wrong Email or Password" });
+        }
+
+      })
+
+    } else {
+      return res.json({ Status: "Error", Error: "Wrong Email or Password" });
+    }
   })
 })
 
@@ -123,98 +132,136 @@ app.get('/logout', (req, res) => {
 
 
 app.get('/getEmployee', (req, res) => {
-    const sql = "SELECT * FROM employee";
-    con.query(sql, (err, result) => {
-        if(err) return res.json({Error: "Get employee error in sql"});
-        return res.json({Status: "Success", Result: result})
-    })
+  const sql = "SELECT * FROM employee";
+  con.query(sql, (err, result) => {
+    if (err) return res.json({ Error: "Get employee error in sql" });
+    return res.json({ Status: "Success", Result: result })
+  })
 })
 
-app.get('/gettimesheet', (req, res)=>{
+app.get('/gettimesheet', (req, res) => {
   const sql = "SELECT * FROM time";
-  con.query(sql , (err, result)=>{
-  if(err) return res.json({Error:"Error in getting time-records of employees"});
-  return res.json({Status:"Success", Result:result})
+  con.query(sql, (err, result) => {
+    if (err) return res.json({ Error: "Error in getting time-records of employees" });
+    return res.json({ Status: "Success", Result: result })
   })
 })
-app.get('/logout_time', (req, res)=>{
+
+app.get('/getleaverequest', (req, res) => {
+  const sql = "SELECT * FROM employeeleave";
+  con.query(sql, (err, result) => {
+    if (err) return res.json({ Error: "Getting error in sql" });
+    return res.json({ Status: "Success", Result: result })
+  })
+})
+
+app.get('/getleaverequestdisplay/:email', (req, res) => {
+  const userEmail = req.params.email;
+  const sql = "SELECT * FROM employeeleave WHERE employee_email = ?";
+
+  con.query(sql, [userEmail], (err, result) => {
+    if (err) {
+      return res.json({ Status: "Error", Error: "Getting error in sql" });
+    }
+
+    return res.json({ Status: "Success", Result: result });
+  });
+});
+app.get('/gettasklist/:email', (req, res) => {
+  const userEmail = req.params.email;
+  const sql = "SELECT * FROM employee_task WHERE employee_email = ?";
+
+  con.query(sql, [userEmail], (err, result) => {
+    if (err) {
+      return res.json({ Status: "Error", Error: "Getting error in sql" });
+    }
+
+    return res.json({ Status: "Success", Result: result });
+  });
+});
+
+app.get('/logout_time', (req, res) => {
   const sql = "SELECT * FROM logout_records";
-  con.query(sql , (err, result)=>{
-  if(err) return res.json({Error:"Error in getting time-records of employees"});
-  return res.json({Status:"Success", Result:result})
+  con.query(sql, (err, result) => {
+    if (err) return res.json({ Error: "Error in getting time-records of employees" });
+    return res.json({ Status: "Success", Result: result })
   })
 })
 
-app.get('/Events', (req, res)=>{
+app.get('/Events', (req, res) => {
   const sql = "SELECT * FROM event_table";
-  con.query(sql , (err, result)=>{
-    if(err){
-      return res.json({Error: "Error getting Events"});
+  con.query(sql, (err, result) => {
+    if (err) {
+      return res.json({ Error: "Error getting Events" });
     }
     return res.json(result);
   });
 });
 
-app.get('/managerlist', (req, res)=>{
+app.get('/managerlist', (req, res) => {
   const sql = "SELECT * FROM users";
-  con.query(sql , (err, result)=>{
-    if(err){
-      return res.json({Error: "Error getting manager"});
+  con.query(sql, (err, result) => {
+    if (err) {
+      return res.json({ Error: "Error getting manager" });
     }
     return res.json(result);
   });
 });
 
-app.get("/gettask", (req, res)=>{
-  const sql = "SELECT * FROM task";
-  con.query(sql,(err,result)=>{
-    if(err) return res.json({Error:"Get Task Error"});
-    return res.json({Status:"success",Result:result})
-  })
-})
+app.get("/gettask", (req, res) => {
+  const sql = "SELECT * FROM employee_task";
+  con.query(sql, (err, result) => {
+    if (err) {
+      console.error('Error fetching tasks:', err);
+      return res.json({ Status: "Error", Error: "Get Task Error" });
+    }
+    return res.json({ Status: "success", Result: result });
+  });
+});
+
 
 app.delete('/remove/:email', (req, res) => {
-    const email = req.params.email;
-    const sql = "DELETE FROM employee WHERE email = ?";
-    
-    con.query(sql, [email], (err, result) => {
-      if (err) {
-        console.error("Error deleting employee:", err);
-        return res.status(500).json({ Error: "Failed to remove employee" });
-      }
-      
-      if (result.affectedRows === 0) {
-        return res.status(404).json({ Error: "Employee not found" });
-      }
-  
-      return res.json({ Status: "Success" });
-    });
+  const email = req.params.email;
+  const sql = "DELETE FROM employee WHERE email = ?";
+
+  con.query(sql, [email], (err, result) => {
+    if (err) {
+      console.error("Error deleting employee:", err);
+      return res.status(500).json({ Error: "Failed to remove employee" });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ Error: "Employee not found" });
+    }
+
+    return res.json({ Status: "Success" });
   });
+});
 
 
-  app.get('/get/:name', (req, res) => {
-    const name = req.params.name;
-    const sql = "SELECT * FROM employee where name = ?";
-    con.query(sql, [name], (err, result) => {
-        if(err) return res.json({Error: "Get employee error in sql"});
-        return res.json({Status: "Success", Result: result})
-    })
+app.get('/get/:name', (req, res) => {
+  const name = req.params.name;
+  const sql = "SELECT * FROM employee where name = ?";
+  con.query(sql, [name], (err, result) => {
+    if (err) return res.json({ Error: "Get employee error in sql" });
+    return res.json({ Status: "Success", Result: result })
+  })
 })
 
-app.get('/employee/:email', (req,res) =>{
-    const email = req.params.email;
-    const sql = "SELECT * FROM employee where email = ?";
-    con.query(sql, [email], (err, result) => {
-        if(err) return res.json({Error: "Get employee error in sql"});
-        return res.json({Status: "Success", Result: result})
-    })
+app.get('/employee/:email', (req, res) => {
+  const email = req.params.email;
+  const sql = "SELECT * FROM employee where email = ?";
+  con.query(sql, [email], (err, result) => {
+    if (err) return res.json({ Error: "Get employee error in sql" });
+    return res.json({ Status: "Success", Result: result })
+  })
 })
 
 app.get('/manager/:email', (req, res) => {
   const email = req.params.email;
   const sql = "SELECT * FROM users WHERE email = ?";
   con.query(sql, [email], (err, result) => {
-    if(err) return res.json({ Error: "Get Manager Error in SQL" });
+    if (err) return res.json({ Error: "Get Manager Error in SQL" });
     return res.json({ Status: "Success", Result: result });
   });
 });
@@ -225,10 +272,10 @@ app.put('/updateEmployee/:email', upload.single('image'), (req, res) => {
   const newMobile = req.body.mobile;
   const newEducation = req.body.education;
   const image = req.file.filename;
-  const maritalStatus = req.body.maritalStatus; 
-  const nationality = req.body.nationality; 
-  const linkedin = req.body.linkedin; 
-  const gender = req.body.gender; 
+  const maritalStatus = req.body.maritalStatus;
+  const nationality = req.body.nationality;
+  const linkedin = req.body.linkedin;
+  const gender = req.body.gender;
 
   const sql = "UPDATE employee SET dob=?, mobile=?, education=?, image=?, maritalstatus=?, nationality=?, linkedin=?, gender=? WHERE email=?";
   con.query(sql, [newDob, newMobile, newEducation, image, maritalStatus, nationality, linkedin, gender, email], (err, result) => {
@@ -245,10 +292,10 @@ app.put('/updateManager/:email', upload.single('image'), (req, res) => {
   const newEducation = req.body.education;
   const image = req.file.filename;
   const newAddress = req.body.address;
-  const maritalStatus = req.body.maritalStatus; 
-  const nationality = req.body.nationality; 
-  const linkedin = req.body.linkedin; 
-  const gender = req.body.gender; 
+  const maritalStatus = req.body.maritalStatus;
+  const nationality = req.body.nationality;
+  const linkedin = req.body.linkedin;
+  const gender = req.body.gender;
 
   const sql = "UPDATE users SET role=?, address=?, dob=?, mobile=?, education=?, image=?, maritalstatus=?, nationality=?, linkedin=?, gender=? WHERE email=?";
   con.query(sql, [newRole, newAddress, newDob, newMobile, newEducation, image, maritalStatus, nationality, linkedin, gender, email], (err, result) => {
@@ -258,145 +305,171 @@ app.put('/updateManager/:email', upload.single('image'), (req, res) => {
 });
 
 
-app.put('/update/:email',upload.single('image'), (req, res) => {
-    const email = req.params.email;
-    const newRole = req.body.role; 
-    const newName = req.body.name; 
-    const newAddress= req.body.address; 
+app.put('/update/:email', upload.single('image'), (req, res) => {
+  const email = req.params.email;
+  const newRole = req.body.role;
+  const newName = req.body.name;
+  const newAddress = req.body.address;
 
-  
-  
-    const sql = "UPDATE employee SET role = ?, name = ?, address = ?  WHERE email = ?";
-    con.query(sql, [newRole, newName, newAddress, email], (err, result) => {
-      if (err) return res.json({ Error: "Update employee error in SQL" });
-      return res.json({ Status: "Success" });
+
+
+  const sql = "UPDATE employee SET role = ?, name = ?, address = ?  WHERE email = ?";
+  con.query(sql, [newRole, newName, newAddress, email], (err, result) => {
+    if (err) return res.json({ Error: "Update employee error in SQL" });
+    return res.json({ Status: "Success" });
+  });
+});
+
+
+// CREATE TABLE logout_records (
+//   id INT AUTO_INCREMENT PRIMARY KEY,
+//   employeeEmail VARCHAR(255),
+//   logoutTime DATETIME
+// );
+
+app.post('/leave/:email', (req, res) => {
+  const leavetype = req.body.leavetype;
+  const startdate = req.body.startdate;
+  const enddate = req.body.enddate;
+  const reason = req.body.reason;
+  const email = req.params.email;
+
+  retrieveEmployeeName(email, (err, name) => {
+    if (err) {
+      console.error('Error retrieving employee name:', err);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+
+    const sql = "INSERT INTO employeeleave (employee_name, employee_email, startdate, enddate, leavetype, reason, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    con.query(sql, [name, email, startdate, enddate, leavetype, reason, 'Pending'], (err, result) => {
+      if (err) return res.json({ Error: "Insert leave request error in SQL" });
+      return res.json({ Success: "Leave request submitted successfully" });
     });
   });
+});
+app.put('/updatetask/:email', (req, res) => {
+  const projecttitle = req.body.projecttitle;
+  const description = req.body.description;
+  const deadline = req.body.deadline;
+  const email = req.params.email;
 
-  app.put('/updatetask/:email', (req, res) => {
-    const projecttitle = req.body.projecttitle;  
-    const description = req.body.description;
-    const deadline = req.body.deadline;
-    const team = req.body.team;
-    const email = req.params.email;   
-  
-    const sql = "UPDATE employee SET projecttitle = ?, description = ?, deadline = ?, team =?  WHERE email = ?";
-    con.query(sql, [projecttitle, description, deadline,team ,  email], (err, result) => {
-      if (err) return res.json({ Error: "Update employee error in SQL" });
-      return res.json({ Success: "Success" });   // Corrected capitalization
-    });
-  });
 
-  app.put('/leave/:email', (req, res) => {
-    const leavetype = req.body.leavetype;   // Corrected attribute name
-    const startdate = req.body.startdate;
-    const enddate = req.body.enddate;
-    const reason = req.body.reason;
-    const email = req.params.email;   // Assuming email is a URL parameter
-  
-    const sql = "UPDATE employee SET leavetype = ?, startdate = ?, enddate = ?, reason =?  WHERE email = ?";
-    con.query(sql, [leavetype, startdate, enddate,reason ,  email], (err, result) => {
-      if (err) return res.json({ Error: "Update employee error in SQL" });
-      return res.json({ Success: "Success" });   // Corrected capitalization
-    });
-  });
-  app.put('/leaveaproval/:name', (req, res) => {
-    const name = req.params.name;
-    const status = req.body.status;
-  
-    const sql = "UPDATE employee SET status = ? WHERE name = ?";
-    con.query(sql, [status, name], (err, result) => {
+  retrieveEmployeeName(email, (err, name) => {
+    if (err) {
+      console.error('Error retrieving employee name:', err);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+
+    const sql = "INSERT INTO employee_task (employee_name, employee_email, project_title, description, deadline, status) VALUES (?, ?, ?, ?, ?, ?)";
+
+    con.query(sql, [name, email, projecttitle, description, deadline, 'Pending'], (err, result) => {
       if (err) {
-
+        console.error('Error inserting task:', err);
         return res.status(500).json({ error: 'Internal Server Error' });
       }
-     
-      return res.json({ success: true });
+      return res.json({ Success: "Success" });
     });
-  });
-  app.put('/timeaproval/:name', (req, res) => {
-    const name = req.params.name;
-    const status = req.body.status;
-  
-    const sql = "UPDATE employee SET timeupdate = ? WHERE name = ?";
-    con.query(sql, [status, name], (err, result) => {
-      if (err) {
 
-        return res.status(500).json({ error: 'Internal Server Error' });
-      }
-     
-      return res.json({ success: true });
-    });
   });
-  app.put('/taskapproval/:name', (req, res) => {
-    const name = req.params.name;
-    const status = req.body.status;
-  
-    const sql = "UPDATE employee SET taskapproval = ? WHERE name = ?";
-    con.query(sql, [status, name], (err, result) => {
-      if (err) {
+});
 
-        return res.status(500).json({ error: 'Internal Server Error' });
-      }
-     
-      return res.json({ success: true });
-    });
+app.put('/leaveapproval', (req, res) => {
+  const id = req.body.id;
+  const status = req.body.status;
+
+  const sql = "UPDATE employeeleave SET status = ? WHERE id = ?";
+  con.query(sql, [status, id], (err, result) => {
+    if (err) {
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+
+    return res.json({ success: true });
   });
-  
+});
 
-  
-  
-  // app.put('/updateEmployee/:email', (req, res) => {
-  //   const email = req.params.email;
-  //   const newDob = req.body.dob; 
-  //   const newMobile= req.body.mobile; 
-  //   const newEducation = req.body.education; 
-  //   const sql = "UPDATE employee SET dob = ?, mobile = ?, education = ? WHERE email = ?";
-  //   con.query(sql, [newDob, newMobile, newEducation, email], (err, result) => {
-  //     if (err) return res.json({ Error: "Update employee error in SQL" });
-  //     return res.json({ Status: "Success" });
-  //   });
-  // });
-  app.get('/employeeCount', (req, res) => {
-    const sql = "Select count(id) as employee from employee";
-    con.query(sql, (err, result) => {
-        if(err) return res.json({Error: "Error in runnig query"});
-        return res.json(result);
-    })
+app.put('/timeaproval/:name', (req, res) => {
+  const name = req.params.name;
+  const status = req.body.status;
+
+  const sql = "UPDATE employee SET timeupdate = ? WHERE name = ?";
+  con.query(sql, [status, name], (err, result) => {
+    if (err) {
+
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+
+    return res.json({ success: true });
+  });
+});
+app.put('/taskapproval/:name', (req, res) => {
+  const name = req.params.name;
+  const status = req.body.status;
+
+  const sql = "UPDATE employee SET taskapproval = ? WHERE name = ?";
+  con.query(sql, [status, name], (err, result) => {
+    if (err) {
+
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+
+    return res.json({ success: true });
+  });
+});
+
+
+
+
+// app.put('/updateEmployee/:email', (req, res) => {
+//   const email = req.params.email;
+//   const newDob = req.body.dob; 
+//   const newMobile= req.body.mobile; 
+//   const newEducation = req.body.education; 
+//   const sql = "UPDATE employee SET dob = ?, mobile = ?, education = ? WHERE email = ?";
+//   con.query(sql, [newDob, newMobile, newEducation, email], (err, result) => {
+//     if (err) return res.json({ Error: "Update employee error in SQL" });
+//     return res.json({ Status: "Success" });
+//   });
+// });
+app.get('/employeeCount', (req, res) => {
+  const sql = "Select count(id) as employee from employee";
+  con.query(sql, (err, result) => {
+    if (err) return res.json({ Error: "Error in runnig query" });
+    return res.json(result);
+  })
 })
 
-  const verifyUser = (req, res, next) => {
-    const token = req.cookies.token;
-    
-    if (!token) {
-      return res.status(401).json({ error: "You are not authenticated" });
-    } else {
-      jwt.verify(token, "jwt-secret-key", (err, decoded) => {
-        if (err) {
-          return res.status(401).json({ error: "Token is invalid or has expired" });
-        }
-        
-        req.name = decoded.name;
-        req.email = decoded.email;
-        next();
-      });
-    }
-  };
-  
-  app.get('/dashboard', verifyUser, (req, res) => {
-    return res.json({ Status: "Success" });
-  });
-  
-  app.get('/Empdashboard', verifyUser, (req, res) => {
-    return res.json({ Status: "Success" });
-  });
-  
+const verifyUser = (req, res, next) => {
+  const token = req.cookies.token;
 
-  
+  if (!token) {
+    return res.status(401).json({ error: "You are not authenticated" });
+  } else {
+    jwt.verify(token, "jwt-secret-key", (err, decoded) => {
+      if (err) {
+        return res.status(401).json({ error: "Token is invalid or has expired" });
+      }
+
+      req.name = decoded.name;
+      req.email = decoded.email;
+      next();
+    });
+  }
+};
+
+app.get('/dashboard', verifyUser, (req, res) => {
+  return res.json({ Status: "Success" });
+});
+
+app.get('/Empdashboard', verifyUser, (req, res) => {
+  return res.json({ Status: "Success" });
+});
+
+
+
 const saltRounds = 10;
 
 app.post('/create', (req, res) => {
-  const { name, email, password, address , role} = req.body;
+  const { name, email, password, address, role } = req.body;
 
   bcrypt.hash(password, saltRounds, (err, hash) => {
     if (err) {
@@ -404,7 +477,7 @@ app.post('/create', (req, res) => {
     }
 
     const sql = "INSERT INTO employee (`name`, `email`, `password`, `address`, `role`) VALUES (?, ?, ?, ?,?)";
-    const values = [name, email, hash, address , role];
+    const values = [name, email, hash, address, role];
 
     con.query(sql, values, (err, result) => {
       if (err) {
@@ -414,14 +487,14 @@ app.post('/create', (req, res) => {
     });
   });
 });
- 
-app.post('/Addevent',(req,res)=>{
-  const {eventName , eventStart, eventEnd , eventDescription} = req.body;
+
+app.post('/Addevent', (req, res) => {
+  const { eventName, eventStart, eventEnd, eventDescription } = req.body;
 
   const sql = "INSERT INTO event_table (`eventName`, `eventStart`, `eventEnd`, `eventDescription`)VALUES (? , ? ,?, ?)";
-  const values= [eventName , eventStart , eventEnd , eventDescription];
-  con.query(sql , values, (err, result)=>{
-    if(err) {
+  const values = [eventName, eventStart, eventEnd, eventDescription];
+  con.query(sql, values, (err, result) => {
+    if (err) {
       return res.json({ success: false, error: "Error inserting data into database" });
     }
     return res.json({ success: true, status: "Success" });
@@ -429,46 +502,39 @@ app.post('/Addevent',(req,res)=>{
 })
 
 app.put('/tasksubmit/:email', (req, res) => {
-  const description = req.body.description;   // Corrected attribute name
+  const project_title = req.body.project_title;
+  const description = req.body.description;
   const status = req.body.status;
-  const email = req.params.email;   // Assuming email is a URL parameter
+  const email = req.params.email;
 
-  const sql = "UPDATE employee SET taskDescription = ?, taskStatus = ? WHERE email = ?";
-  con.query(sql, [description, status,  email], (err, result) => {
+  const sql = "UPDATE employee_task SET employee_description = ?, employee_status = ? WHERE project_title = ?";
+  con.query(sql, [description, status, project_title], (err, result) => {
     if (err) return res.json({ Error: "Update Task error in SQL" });
-    return res.json({ Success: "Success" });   // Corrected capitalization
+    return res.json({ Success: "Success" });
   });
 });
-app.post('/createmanager', (req,res)=>{
-  const {name , email , password} = req.body;
 
-  bcrypt.hash(password,saltRounds,(err,hash)=>{
-    if(err){
-      return res.json({error:"Error Hassing pw"});
+app.post('/createmanager', (req, res) => {
+  const { name, email, password } = req.body;
+
+  bcrypt.hash(password, saltRounds, (err, hash) => {
+    if (err) {
+      return res.json({ error: "Error Hassing pw" });
     }
     const sql = "INSERT INTO users (`name`, `email`, `password`) VALUES (?,?,?)";
-    const values =[name , email , hash];
+    const values = [name, email, hash];
 
-    con.query(sql,values,(err,result)=>{
-      if(err){
-        return res.json({error:"Error inserting data"});
+    con.query(sql, values, (err, result) => {
+      if (err) {
+        return res.json({ error: "Error inserting data" });
       }
-      return res.json({status:"Success"});
+      return res.json({ status: "Success" });
     });
   });
 });
 
 
-function retrieveEmployeeName(email, callback) {
-  const sql = "SELECT name FROM employee WHERE email = ?";
-  con.query(sql, [email], (err, result) => {
-    if (err) {
-      callback(err, null);
-    } else {
-      callback(null, result[0].name);
-    }
-  });
-}
+
 
 app.post('/login', (req, res) => {
   const email = req.body.email;
@@ -605,43 +671,43 @@ app.post('/logout', (req, res) => {
 // });
 
 
-function deleteExpiredRecords() {
-  con.query(
-    `UPDATE employee SET leavetype = NULL, startdate = NULL, enddate = NULL, reason = NULL  WHERE 
-    enddate < CURRENT_DATE`,
-    (error, result) => {
-      if (error) {
-        console.error('Error deleting expired records:', error);
-      } else {
-        console.log(`${result.affectedRows} records deleted.`);
-      }
-    }
-  );
-}
+// function deleteExpiredRecords() {
+//   con.query(
+//     `UPDATE employee SET leavetype = NULL, startdate = NULL, enddate = NULL, reason = NULL , status= NULL WHERE 
+//     enddate < CURRENT_DATE`,
+//     (error, result) => {
+//       if (error) {
+//         console.error('Error deleting expired records:', error);
+//       } else {
+//         console.log(`${result.affectedRows} records deleted.`);
+//       }
+//     }
+//   );
+// }
 
-cron.schedule('20 14 * * *', () => {
-  deleteExpiredRecords();
-});
+// cron.schedule('20 14 * * *', () => {
+//   deleteExpiredRecords();
+// });
 
 
-function sendEmail(to, subject , text){
+function sendEmail(to, subject, htmlBody) {
   const mailOptions = {
-    from : "Application1manager1@gmail.com",
+    from: "Application1manager1@gmail.com",
     to,
     subject,
-    text
+    html: htmlBody 
   }
 
   const transporter = nodemailer.createTransport({
     service: 'gmail',
-    auth:{
+    auth: {
       user: 'application1manager1@gmail.com',
       pass: 'qevu sefx pmgs hpxv'
     }
   });
-  
 
-  transporter.sendMail(mailOptions, function(error, info){
+
+  transporter.sendMail(mailOptions, function (error, info) {
     if (error) {
       console.error('Error sending email:', error);
     } else {
@@ -650,55 +716,119 @@ function sendEmail(to, subject , text){
   });
 }
 
-function sendingEmail() {
+let lastCheckTimestamp = null;
+
+function checkForNewEntries() {
   con.query(
-    `SELECT * FROM employee WHERE leavetype IS NOT NULL`,
-    (error , result) =>{
-      if(error){
+    `SELECT * FROM employeeleave WHERE status = 'Pending'`,
+    [lastCheckTimestamp],
+    (error, result) => {
+      if (error) {
         console.error("Error Collecting Data's :", error);
       } else {
-        console.log("Details Collected for Leave Request");
+        if (result.length > 0) {
+          console.log("New Details Collected for Leave Request");
 
-        const { employee_name, start_date, end_date, leave_type } = result;
-        const emailBody = `
-        You have Received an Leave Request From,
-           Employees !, Please visit website to do action (Approve / Reject)
+          const leaveRequestHTML = result.map(request => `
+            <tr>
+              <td>${request.employee_name}</td>
+              <td>${request.leavetype}</td>
+              <td>${request.startdate}</td>
+              <td>${request.enddate}</td>
+              <td>${request.reason}</td>
+            </tr>
+          `).join('');
+
+          const emailBody = `
+          <div style="font-family: Arial, sans-serif;">
+            <h2 class="text-primary">Dear Manager,</h2>
+            <div class="alert alert-info">
+              <p>Employees have submitted leave requests with the following details:</p>
+              <table class="table table-striped">
+                <thead class="thead-dark">
+                  <tr>
+                    <th>Employee Name</th>
+                    <th>Leave Type</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Reason</th>
+                  </tr>
+                </thead>
+                <tbody>
+                 ${leaveRequestHTML}
+                </tbody>
+              </table>
+            </div>
+            <p>Please visit the website to take action (Approve / Reject).</p>
+            <p>Regards,<br>A2 Cloud Solution</p>
+          </div>
         `;
-        sendEmail('jayanthkumar0604@gmail.com', ' Leave Request from  Employees' , emailBody);
+        
+
+          sendEmail('jayanthkumar0604@gmail.com', 'Leave Request', emailBody);
+          lastCheckTimestamp = new Date();
+        } else {
+          console.log("No new leave requests or manager has already taken action.");
+        }
       }
     }
-  )
+  );
 }
 
-function DelayLogin(){
+
+
+// function sendingEmail() {
+//   con.query(
+//     `SELECT * FROM employee WHERE leavetype IS NOT NULL`,
+//     (error, result) => {
+//       if (error) {
+//         console.error("Error Collecting Data's :", error);
+//       } else {
+//         console.log("Details Collected for Leave Request");
+
+//         const { employee_name, start_date, end_date, leave_type } = result;
+//         const emailBody = `
+//         You have Received an Leave Request From,
+//            Employees !, Please visit website to do action (Approve / Reject)
+//         `;
+//         sendEmail('jayanthkumar0604@gmail.com', ' Leave Request from  Employees', emailBody);
+//       }
+//     }
+//   )
+// }
+
+function DelayLogin() {
   con.query(
     `SELECT * FROM employee WHERE Ddescription IS NOT NULL`,
-    (error, result) =>{
-      if(error){
+    (error, result) => {
+      if (error) {
         console.error("Error Collecting DelayLogin Data's:", error);
-      }else{
+      } else {
         console.log("Delay Login Employee List Collected");
-         const emailContent = 
-         `
+        const emailContent =
+          `
          Delay Login / Change in Employee Login Time Sheet , Employees Submmited their Reason for Change / Delay 
          Visit Website to Approve / Reject 
 
          `;
-         sendEmail('jayanthkumar0604@gmail.com', 'Delay Login /Change in Time Sheet From Employees' , emailContent);
+        sendEmail('jayanthkumar0604@gmail.com', 'Delay Login /Change in Time Sheet From Employees', emailContent);
       }
     }
   )
 }
 
-cron.schedule('35 15 * * *', () => {
-  sendingEmail();
-});
+// cron.schedule('35 15 * * *', () => {
+//   sendingEmail();
+// });
 
-cron.schedule('37 15 * * *',()=>{
+cron.schedule('37 15 * * *', () => {
   DelayLogin();
 })
 
+cron.schedule('30 12 * * *', () => {
+  checkForNewEntries()
+})
 
 app.listen(8081, () => {
-    console.log("Listening");
+  console.log("Listening");
 });

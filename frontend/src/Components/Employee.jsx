@@ -145,7 +145,11 @@ function Employee() {
     setDetails(prev=> !prev);
   };
 
-  
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
   return (
     <div className="backgb">
       {isLoading ? (
@@ -160,8 +164,13 @@ function Employee() {
                 <img src={`http://localhost:8081/images/` + manager.image}  className="logoff-image"/>
  
                 </div>
-                <div className='Nav-bar-header'> 
-                 <ul className='head-content-ul'>
+                <div className='Nav-bar-header'>
+                  <div className='menu-toggle' onClick={toggleMenu}>
+                    <div className='bar'></div>
+                    <div className='bar'></div>
+                    <div className='bar'></div>
+                  </div>
+                  <ul className={`head-content-ul ${isMenuOpen ? 'active' : ''}`}>
                     <li  className='head-content-li'>
                         <img src='/assets/images/dashboard-navbar.png' className='db-dash' alt='db-db'/>
                         <Link  to={`/Manager-dashboard/${email}`}>
@@ -284,7 +293,7 @@ function Employee() {
               </strong>
             </div>
   <div className="handle-btn">
-    <Link to={"/AssignTask/" + encodeURIComponent(employee.email)} ><button className="Assign">Assign Task</button> </Link>
+    <Link to={"/AssignTask/" + encodeURIComponent(employee.email)} ><button className="Assign">View/Assign Task</button> </Link>
     <Link to={"/Edit-Employee/" + encodeURIComponent(employee.email)} ><button className="btnn">Edit</button> </Link>
     <button className="btnn1" onClick={(e)=> handleDelete(employee.email)}>Delete</button> 
     </div>

@@ -27,24 +27,24 @@ function ApplyLeave() {
     const navigate = useNavigate();
 
     const handleSubmit = (event) => {
-        event.preventDefault();
-        const encodedEmail = encodeURIComponent(params.email);
-
-        axios
-            .put("http://localhost:8081/leave/" + encodedEmail, {
-                leavetype: data.leavetype,  
-                startdate: data.startdate,
-                enddate: data.enddate,
-                reason : data.reason
-            })
-            .then((res) => {
-                if (res.data.Success) {   
-                    alert("Leave Request Sent")
-                    console.log(res.data.Success);
-                }
-            })
-            .catch((err) => console.log(err));
-    };
+      event.preventDefault();
+  
+      axios
+          .post("http://localhost:8081/leave/" + encodeURIComponent(params.email), {
+              leavetype: data.leavetype,  
+              startdate: data.startdate,
+              enddate: data.enddate,
+              reason: data.reason
+          })
+          .then((res) => {
+              if (res.data.Success) {   
+                  alert("Leave Request Sent");
+                  console.log(res.data.Success);
+              }
+          })
+          .catch((err) => console.log(err));
+  };
+  
 
     const [data, setData] = useState({
         leavetype: "Sick Leave",   
@@ -52,12 +52,26 @@ function ApplyLeave() {
         enddate: "",
         reason:"",
     });
-
+    const handleLogout = () => {
+      axios
+        .get("http://localhost:8081/logout")
+        .then((res) => {
+          if (res.data.Status === "Success") {
+            navigate("/Login");
+          } else {
+            console.error("Logout failed");
+          }
+        })
+        .catch((err) => {
+          console.error("Logout failed:", err);
+        });
+    };
     const [timeupdate, setTimeUpdate] = useState(false);
   
     const toggleUpdate = () => {
       setTimeUpdate(prev => !prev)
     };
+    
     return (
         <div>
             {isLoading ? (

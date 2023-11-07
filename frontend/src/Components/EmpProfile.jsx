@@ -49,6 +49,12 @@ function EmpProfile() {
   };
 
   const { isLoggedIn, login, logout } = useLoginStatus();
+
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
   return (
     <div>
       {isLoading ? (
@@ -64,8 +70,13 @@ function EmpProfile() {
                 <img src={`http://localhost:8081/images/` + employee.image}  className="logoff-image"/>
  
                 </div>
-                <div className='Nav-bar-header'> 
-                <ul className='head-content-ul'>
+                <div className='Nav-bar-header'>
+                  <div className='menu-toggle' onClick={toggleMenu}>
+                    <div className='bar'></div>
+                    <div className='bar'></div>
+                    <div className='bar'></div>
+                  </div>
+                  <ul className={`head-content-ul ${isMenuOpen ? 'active' : ''}`}>
                   <li className='head-content-li'>
                     <img src='/assets/images/dashboard-navbar.png' className='db-dash' alt='db-db' />
                     <Link to={`/Employee-dashboard/${email}`}>
