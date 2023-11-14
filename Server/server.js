@@ -352,7 +352,7 @@ app.put('/updatetask/:email', (req, res) => {
   const description = req.body.description;
   const deadline = req.body.deadline;
   const email = req.params.email;
-
+  const team = req.body.team; 
 
   retrieveEmployeeName(email, (err, name) => {
     if (err) {
@@ -360,18 +360,53 @@ app.put('/updatetask/:email', (req, res) => {
       return res.status(500).json({ error: 'Internal Server Error' });
     }
 
-    const sql = "INSERT INTO employee_task (employee_name, employee_email, project_title, description, deadline, status) VALUES (?, ?, ?, ?, ?, ?)";
+    const sql = "INSERT INTO employee_task (employee_name, employee_email, project_title, description, deadline, status,team) VALUES (?, ?, ?, ?, ?, ?,?)";
 
-    con.query(sql, [name, email, projecttitle, description, deadline, 'Pending'], (err, result) => {
+    con.query(sql, [name, email, projecttitle, description, deadline,'Pending',team], (err, result) => {
       if (err) {
         console.error('Error inserting task:', err);
         return res.status(500).json({ error: 'Internal Server Error' });
       }
-      return res.json({ Success: "Success" });
-    });
 
+      // Update the team in the employee table
+      const updateTeamSql = "UPDATE employee SET team = ? WHERE email = ?";
+      con.query(updateTeamSql, [team, email], (err, result) => {
+        if (err) {
+          console.error('Error updating team:', err);
+          return res.status(500).json({ error: 'Internal Server Error' });
+        }
+        return res.json({ Success: "Success" });
+      });
+    });
   });
 });
+
+// app.put('/updatetask/:email', (req, res) => {
+//   const projecttitle = req.body.projecttitle;
+//   const description = req.body.description;
+//   const deadline = req.body.deadline;
+//   const email = req.params.email;
+//   const team = req.body.team; 
+
+
+//   retrieveEmployeeName(email, (err, name) => {
+//     if (err) {
+//       console.error('Error retrieving employee name:', err);
+//       return res.status(500).json({ error: 'Internal Server Error' });
+//     }
+
+//     const sql = "INSERT INTO employee_task (employee_name, employee_email, project_title, description, deadline, status,team) VALUES (?, ?, ?, ?, ?, ?,?)";
+
+//     con.query(sql, [name, email, projecttitle, description, deadline,'Pending',team], (err, result) => {
+//       if (err) {
+//         console.error('Error inserting task:', err);
+//         return res.status(500).json({ error: 'Internal Server Error' });
+//       }
+//       return res.json({ Success: "Success" });
+//     });
+
+//   });
+// });
 
 app.put('/leaveapproval', (req, res) => {
   const id = req.body.id;

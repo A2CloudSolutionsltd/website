@@ -7,7 +7,6 @@ import  {
 import 'bootstrap/dist/css/bootstrap.css';
 import SignIn from './Components/SignIn';
 import TermsCondition from './Components/TermsCondition';
-import Dashboard from './Components/Dashboard';
 import Employee from './Components/Employee';
 import Profile from './Components/Profile';
 import Edit from './Components/Edit';
@@ -19,13 +18,11 @@ import TaskfromManager from './Components/TaskfromManager';
 import SignUp from './Components/SignUp';
 import ApplyLeave from './Components/ApplyLeave';
 import LeaveReq from './Components/LeaveReq';
-import Teams from './Components/Teams';
 import AddManager from './Components/AddManager';
 import ManagerEditProfile from './Components/ManagerEditProfile';
 import TaskSubmit from './Components/TaskSubmit';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Timesheet from './Components/Timesheet';
 import Event from './Components/Event';
 import Calendar from './Components/Calendar';
 import ManagerDashboard from './Components/ManagerDashboard';
@@ -42,10 +39,9 @@ function App() {
       <LoginProvider>
   <Router>
     <Routes>
-      <Route path="/Login" element={<SignIn />} />
+      <Route path="/" element={<SignIn />} />
       <Route path="/Register" element={<SignUp />} />
       <Route path="/Termsandcondition-page" element={<TermsCondition />} />
-      <Route path="/dashboard/:email" element={<Dashboard />} />
       <Route path="/profile/:email" element={<Profile />} />
       <Route path="/CRUD-employee/:email" element={<Employee />} />
       <Route path="/Edit-Employee/:email" element={<Edit />} />
@@ -54,14 +50,13 @@ function App() {
       <Route path="/Employee-dashboard/:email" element={<Empdashboard />} />
       <Route path='/EmployeeEditOption/:email' element={<EditEmployee />} />
       <Route path='/AssignTask/:email' element={<TaskfromManager />} />
-      <Route path='/View-Team' element={<Teams />} />
+
        <Route path='/Add-Events/:email' element={<Event />} />
       <Route path='/ApplyLeave/:email' element={<ApplyLeave />} />
       <Route path='/Employee-Leave-Request/:email' element={<LeaveReq />} />
       <Route path='/Add-Manager/:email' element={<AddManager />} />
       <Route path='/Manager-Profile/:email' element={<ManagerEditProfile />} />
       <Route path = '/task-Submit-by-employees/:email' element={<TaskSubmit />} />
-      <Route path='/Time-Sheet-Employee/:email' element={<Timesheet />} />
       <Route path='/Calendar/:email' element={<Calendar />} />
       <Route path='/Add-Employee/:email' element={<AddEmployee />} />
       <Route path='/Manager-dashboard/:email' element={<ManagerDashboard />} />

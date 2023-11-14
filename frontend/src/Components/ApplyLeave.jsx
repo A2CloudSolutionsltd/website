@@ -39,7 +39,6 @@ function ApplyLeave() {
           .then((res) => {
               if (res.data.Success) {   
                   alert("Leave Request Sent");
-                  console.log(res.data.Success);
               }
           })
           .catch((err) => console.log(err));
@@ -57,7 +56,7 @@ function ApplyLeave() {
         .get("http://localhost:8081/logout")
         .then((res) => {
           if (res.data.Status === "Success") {
-            navigate("/Login");
+            navigate("/");
           } else {
             console.error("Logout failed");
           }

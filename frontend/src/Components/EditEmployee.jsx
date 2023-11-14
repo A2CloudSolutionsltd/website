@@ -179,14 +179,14 @@ function EditEmployee() {
 
           </div>
           <form
-            enctype="multipart/form-data"
+            encType="multipart/form-data"
             className="Signup-form"
             name="form"
             onSubmit={handleSubmit}
           >
             <div className="total-edit">
               <div className="edit-part1">
-                <label for="inputName" className="signup-label">
+                <label htmlFor="inputName" className="signup-label">
                   address<span className="mark-indicatior">*</span>
                 </label>
                 <input
@@ -219,7 +219,7 @@ function EditEmployee() {
                     </li>
                   ))}
                 </ul>
-                <label for="inputName" className="signup-label">
+                <label htmlFor="inputName" className="signup-label">
                   Date of Birth<span className="mark-indicatior">*</span>
                 </label>
                 <input
@@ -235,7 +235,7 @@ function EditEmployee() {
                   name="dob"
                   required
                 />
-                <label for="inputRole" className="signup-label">
+                <label htmlFor="inputRole" className="signup-label">
                   Mobile<span className="mark-indicatior">*</span>
                 </label>
                 <input
@@ -252,7 +252,7 @@ function EditEmployee() {
                   required
                 />
 
-                <label for="inputAddress" className="signup-label">
+                <label htmlFor="inputAddress" className="signup-label">
                   Education<span className="mark-indicatior">*</span>
                 </label>
                 <input
@@ -269,7 +269,7 @@ function EditEmployee() {
                   required
                 />
 
-                <label className="signup-label" for="inputGroupFile01">
+                <label className="signup-label" htmlFor="inputGroupFile01">
                   Select Image
                 </label>
                 <input

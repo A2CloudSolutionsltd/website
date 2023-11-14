@@ -64,7 +64,6 @@ function TaskSubmit() {
     axios
       .get(`http://localhost:8081/manager/${email}`)
       .then((res) => {
-        console.log('API Response:', res.data); // Log the entire response
         if (res.data && res.data.Result && res.data.Result.length > 0) {
           setManager(res.data.Result[0]);
         } else {

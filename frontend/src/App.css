@@ -557,6 +557,12 @@ input#manage,
   color: white;
   margin-left: 6em;
   margin-bottom: 1em;
+}.over-flow-x {
+  float: left;
+  max-width: 1000px;
+  overflow-x: auto;
+  margin-left: 5em;
+  padding: 1.5em;
 }
 
 .TaskForm input,textarea{
@@ -573,9 +579,16 @@ input#manage,
 .TaskForm input,textarea:focus {
   border-bottom-color: black;
   outline: none;
-}.TaskLeft{
+}.TaskLeft {
   float: right;
-  width:40%;
+  width: 40%;
+  position: absolute;
+  right: 5%;
+  top: 45%;
+  padding: 1em;
+}
+.container {
+  padding: 10px;
 }.Task-Img {
   width: 70%;
   margin-top: 2em;
@@ -934,16 +947,12 @@ img.Leavereqimage {
   width: 100%;
 }.display-teams {
   float: left;
-  width: 65%;
-  position: relative;
-  left: 5%;
-  background-color: white;
+  width: 100%;
   box-shadow: rgba(0,0,0,0.35)0px 5px 15px;
   padding: 10px;
   border-radius: 10px;
-  max-width: 1000px;
-  overflow-x: auto;
   display: flex;
+  margin: 10px;
 }.team {
   float: left;
   width: 30%;

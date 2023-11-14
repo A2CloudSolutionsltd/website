@@ -25,7 +25,7 @@ function Empdashboard() {
         if (res.data.Status === "Success") {
           console.log(res.data);
         } else {
-          navigate("/Login");
+          navigate("/");
         }
       })
       .catch((err) => {
@@ -41,7 +41,7 @@ function Empdashboard() {
       .get("http://localhost:8081/logout")
       .then((res) => {
         if (res.data.Status === "Success") {
-          navigate("/Login");
+          navigate("/");
         } else {
           console.error("Logout failed");
         }
@@ -352,7 +352,7 @@ function Empdashboard() {
 
                 <div className="LeaveandCount">
                   <div className='content-title1'>
-                    <p> <Clock /></p>
+                    <p> <Clock  /></p>
                   </div>
                   <div className="leave">
                     <div className="image-container">

@@ -178,7 +178,7 @@ function ManagerEditProfile() {
 
           </div>
           <form
-            enctype="multipart/form-data"
+            encType="multipart/form-data"
             className="Signup-form"
             name="form"
             onSubmit={handleSubmit}

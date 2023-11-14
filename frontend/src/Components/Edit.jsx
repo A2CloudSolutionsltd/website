@@ -55,55 +55,9 @@ function Edit() {
     <div className="backgb">
       <div>
         <div>
-          <div
-            className="offcanvas offcanvas-start w-25"
-            tabindex="-1"
-            id="offcanvas"
-            data-bs-keyboard="false"
-            data-bs-backdrop="false"
-          >
-            <div className="offcanvas-header">
-              <h6 className="offcanvas-title d-none d-sm-block" id="offcanvas">
-                Menu
-              </h6>
-              <button
-                type="button"
-                className="btn-close text-reset"
-                data-bs-dismiss="offcanvas"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div className="offcanvas-body px-0">
-              <ul
-                className="nav nav-pills flex-column mb-sm-auto mb-0 align-items-start"
-                id="menu"
-              >
-                <li>
-                  <Link to="/CRUD-employee" className="nav-link text-truncate">
-                    <i classNameName="fs-4 bi-people"></i>
-                    <span className="ms-1 d-none d-sm-inline">
-                      Manage Employee
-                    </span>{" "}
-                  </Link>
-                </li>
-              </ul>
-            </div>
-          </div>
           <div className="container-fluid">
             <div className="row">
               <div className="col min-vh-100 py-3">
-                <button
-                  className="btn float-end"
-                  data-bs-toggle="offcanvas"
-                  data-bs-target="#offcanvas"
-                  role="button"
-                >
-                  <i
-                    className="bi bi-arrow-right-square-fill fs-3"
-                    data-bs-toggle="offcanvas"
-                    data-bs-target="#offcanvas"
-                  ></i>
-                </button>
                 <div className="adjust">
                   <div className="d-flex flex-column align-items-center pt-4">
                     <form

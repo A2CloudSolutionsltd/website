@@ -30,7 +30,7 @@ function EmployeeTask() {
       .get("http://localhost:8081/logout")
       .then((res) => {
         if (res.data.Status === "Success") {
-          navigate("/Login");
+          navigate("/");
         } else {
           console.error("Logout failed");
         }
@@ -53,7 +53,7 @@ function EmployeeTask() {
       .then((res) => {
         if (res.data.Success) {
           alert("Report Submitted");
-          console.log(res.data.Success);
+
         }
       })
       .catch((err) => console.log(err));
@@ -166,7 +166,7 @@ function EmployeeTask() {
               <form onSubmit={handleSubmit}>
 
                 <label className="signup-label">Project Title:</label>
-                <div class="custom-select">
+                <div className="custom-select">
                   <select onChange={(e) => setSelectedTitle(e.target.value)}>
                     <option value="">Select</option>
                     {data1.map((title, index) => (
@@ -188,7 +188,7 @@ function EmployeeTask() {
                 />
 
                 <label className="signup-label">Status:</label>
-                <div class="custom-select">
+                <div className="custom-select">
                   <select
                     id="status"
                     name="status"

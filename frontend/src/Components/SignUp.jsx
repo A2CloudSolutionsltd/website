@@ -35,7 +35,7 @@ function SignUp() {
       .post("http://localhost:8081/create", values)
       .then((res) => {
         if (res.data.status === "Success") {
-          navigate("/Login")
+          navigate("/")
         } else {
           alert("Error in Registration. Please try again.");
         }
@@ -139,7 +139,7 @@ function SignUp() {
           </div>
           <div className='Process-right'>
             <img src='assets/images/signup(1).png' alt='inner file missing' className='signup-img' />
-            <p className='image-bottom-para'><Link to="/Login">I already have an Account !</Link></p>
+            <p className='image-bottom-para'><Link to="/">I already have an Account !</Link></p>
           </div>
         </div>
       )}

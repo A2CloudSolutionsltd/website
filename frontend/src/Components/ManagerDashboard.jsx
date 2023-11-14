@@ -40,7 +40,7 @@ function ManagerDashboard() {
     axios.get("http://localhost:8081/logout")
       .then((res) => {
         if (res.data.Status === "Success") {
-          navigate("/Login");
+          navigate("/");
         } else {
           console.error("Logout failed");
         }
@@ -88,12 +88,26 @@ function ManagerDashboard() {
         .catch((err) => console.log(err));
 }, []);
   const teams = {};
+  const [data1, setData1] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:8081/gettask")
+      .then((res) => {
+        if (res.data.Status === "success") {
+          setData1(res.data.Result);
+        } else {
+          alert("Error");
+        }
+      })
+      .catch((err) => console.log(err));
+  }, []);
   const [data, setData] = useState([]);
-  data.forEach((employee) => {
+  data1.forEach((employee) => {
     if (!teams[employee.team]) {
       teams[employee.team] = [];
     }
-    teams[employee.team].push(employee.name);
+    teams[employee.team].push(employee.employee_name);
   });
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -229,31 +243,21 @@ function ManagerDashboard() {
             </div>
             </div>
             </div>
-
-            {/* <div className="content-2">
-              <img src="/assets/images/task1new.png" alt="leave-req" className="leave-req1" />
-              <Link to="/Daily-task-Submit-by-employees"><button className="req-btn">Task</button></Link>
-            </div>
-
-            <div className="content-1">
-              <h5>Employee Count</h5>
-              <img src="/assets/images/count.jpg" alt="Employee-count" className="Countimage" />
-              <p>{employeeCount}</p>
-            </div> */}
-
-<div className='display-teams'>
-                            {Object.entries(teams).map(([team, members]) => (
-                                <div className='team' key={team}>
-                                    <h2>{team}</h2>
-                                    <hr />
-                                    <ul>
-                                        {members.map((member, index) => (
-                                            <li key={index}>{member}</li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            ))}
-                        </div>
+<div className='over-flow-x'>
+            <div className='display-teams'>
+  {Object.entries(teams).map(([team, members]) => (
+    <div className='team' key={team}>
+      <h2>{team}</h2>
+      <hr />
+      <ul>
+        {members.map((member, index) => (
+          <li key={index}>{member}</li>
+        ))}
+      </ul>
+    </div>
+  ))}
+</div>
+</div>
 
           </div>
 

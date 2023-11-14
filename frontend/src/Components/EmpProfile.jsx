@@ -13,7 +13,7 @@ function EmpProfile() {
       .get("http://localhost:8081/logout")
       .then((res) => {
         if (res.data.Status === "Success") {
-          navigate("/Login");
+          navigate("/");
         } else {
           console.error("Logout failed");
         }

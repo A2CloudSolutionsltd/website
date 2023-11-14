@@ -23,7 +23,6 @@ function EmployeeTimesheet() {
         axios
             .get(`http://localhost:8081/manager/${email}`)
             .then((res) => {
-                console.log('API Response:', res.data);
                 if (res.data && res.data.Result && res.data.Result.length > 0) {
                     setManager(res.data.Result[0]);
                 } else {
@@ -63,8 +62,6 @@ function EmployeeTimesheet() {
     //         .catch((err) => console.log(err));
     // }, []);
     const convertToValidDate = (dateString, timeString) => {
-        console.log('Received date string:', dateString);
-        console.log('Received time string:', timeString);
       
         const [day, month, year] = dateString.split('/');
         const [hours, minutes] = timeString.split(':');
@@ -128,15 +125,6 @@ function EmployeeTimesheet() {
       });
     }); 
     
-      
-    
-    
-    console.log('Combined Data:', combinedData);
-    console.log('Events:', combinedData.map(event => ({
-        title: `${event.employeeName}'s Work Time`,
-        start: new Date(`${event.date}T${event.login}`),
-        end: event.logoutTime ? new Date(`${event.date}T${event.logoutTime}`) : null,
-    })));
     const employees = {};
 
     combinedData.forEach((record) => {
