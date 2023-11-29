@@ -9,15 +9,32 @@ import Footerpart from "./Footerpart";
 import Clock from "./Clock";
 import { useLoginStatus } from './LoginContext';
 import StatusIndicator from './StatusIndicator';
+import Aos from "aos";
+import "aos/dist/aos.css"
 function Empdashboard() {
 
   const { isLoggedIn, login, logout } = useLoginStatus();
 
-
+  useEffect(()=>{
+    Aos.init();
+  },[])
   const navigate = useNavigate();
   const { email } = useParams();
   const [employee, setEmployee] = useState({});
   const [employeeCount, setEmployeeCount] = useState()
+  const [data2, setData2] = useState([]);
+  useEffect(() => {
+    axios
+      .get(`http://localhost:8081/gettasklist/${email}`)
+      .then((res) => {
+        if (res.data.Status === "Success") {
+          setData2(res.data.Result);
+        } else {
+          alert("Error");
+        }
+      })
+      .catch((err) => console.log(err));
+  }, [email]);
   useEffect(() => {
     axios
       .get("http://localhost:8081/Empdashboard")
@@ -285,7 +302,14 @@ function Empdashboard() {
               </div>
               <div className='dp-top-img'>
                 <StatusIndicator isLoggedIn={isLoggedIn} />
-                <img src={`http://localhost:8081/images/` + employee.image} className="logoff-image" />
+                <img
+  src={`http://localhost:8081/images/` + employee.image}
+  className="logoff-image"
+  onError={(e) => {
+    e.target.src = '/assets/images/profile.jpg'; 
+  }}
+  alt="Employee"
+/>
 
               </div>
               <div className='Nav-bar-header'>
@@ -331,7 +355,11 @@ function Empdashboard() {
                   <div className="Log-off">
                     <img src="/assets/images/66847.png" alt="remove" className="cancel-togle" onClick={toggleUpdate} />
                     <div className="left-toggle">
-                      <img src={`http://localhost:8081/images/` + employee.image} className="off-image" />
+                      <img src={`http://localhost:8081/images/` + employee.image} className="off-image"
+                        onError={(e) => {
+                          e.target.src = '/assets/images/profile.jpg'; 
+                        }}
+                      />
                       <h4>{employee.name}</h4>
                       <p>{employee.email}</p>
                     </div>
@@ -351,8 +379,10 @@ function Empdashboard() {
                 </div>
 
                 <div className="LeaveandCount">
+
+
                   <div className='content-title1'>
-                    <p> <Clock  /></p>
+                    <span> <Clock  /></span>
                   </div>
                   <div className="leave">
                     <div className="image-container">
@@ -390,7 +420,16 @@ function Empdashboard() {
                   <div className="leave">
                     <h5>Task</h5>
                     <img src="/assets/images/task1new.png" alt="Employee-count" className="Countimage" />
-                    <p>{employee.projecttitle}</p>
+                                    <div className="custom-select1">
+                  <select onChange={(e) => setSelectedTitle(e.target.value)}>
+                    <option value="">View</option>
+                    {data2.map((title, index) => (
+                      <option key={index} value={title.project_title}>
+                        {title.project_title}
+                      </option>
+                    ))}
+                  </select>
+                </div>
                   </div>
                 </div>
 
@@ -401,7 +440,9 @@ function Empdashboard() {
 
 
                 <div className='manager-profile-display'>
-                  <img src={`http://localhost:8081/images/` + employee.image} className="prodi-image" />
+                  <img src={`http://localhost:8081/images/` + employee.image} className="prodi-image"   onError={(e) => {
+    e.target.src = '/assets/images/profile.jpg'; 
+  }}/>
 
                   <h4>{employee.name}</h4>
                   <p>{employee.email}</p>
@@ -483,7 +524,11 @@ function Empdashboard() {
                     <div key={index} className="teammembers">
                       <div className="spe-te">
                         <div className="teamlist-left">
-                          <img src={`http://localhost:8081/images/` + member.image} className="rounded-profile2" />
+                          <img src={`http://localhost:8081/images/` + member.image} className="rounded-profile2" 
+                            onError={(e) => {
+                              e.target.src = '/assets/images/profile.jpg'; 
+                            }}
+                          />
                         </div>
                         <div className="teamlist-right">
                           <p>{member.name}</p>
@@ -501,7 +546,11 @@ function Empdashboard() {
                     <div key={index} className="event-display">
 
                       <div className="list-left-img">
-                        <img src={`http://localhost:8081/images/` + manager.image} className="rounded-profile2" />
+                        <img src={`http://localhost:8081/images/` + manager.image} className="rounded-profile2"
+                          onError={(e) => {
+                            e.target.src = '/assets/images/profile.jpg'; 
+                          }}
+                        />
                       </div>
                       <div className="list-right">
 
@@ -514,7 +563,11 @@ function Empdashboard() {
                     <div key={index} className="event-display">
 
                       <div className="list-left-img">
-                        <img src={`http://localhost:8081/images/` + employee.image} className="rounded-profile2" />
+                        <img src={`http://localhost:8081/images/` + employee.image} className="rounded-profile2" 
+                        onError={(e) => {
+    e.target.src = '/assets/images/profile.jpg'; 
+  }}
+                        />
                       </div>
                       <div className="list-right">
 

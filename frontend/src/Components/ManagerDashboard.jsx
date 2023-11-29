@@ -128,7 +128,9 @@ function ManagerDashboard() {
             </div>
             <div className='dp-top-img'>
             
-              <img src={`http://localhost:8081/images/` + manager.image} className="logoff-image" />
+              <img src={`http://localhost:8081/images/` + manager.image} className="logoff-image"   onError={(e) => {
+    e.target.src = '/assets/images/profile.jpg'; 
+  }} />
 
             </div>
             <div className='Nav-bar-header'>
@@ -180,7 +182,9 @@ function ManagerDashboard() {
              <div className="Log-off">
              <img src="/assets/images/66847.png" alt="remove" className="cancel-togle" onClick={toggleUpdate}  />
                <div className="left-toggle">
-               <img src={`http://localhost:8081/images/` + manager.image}  className="off-image"/>
+               <img src={`http://localhost:8081/images/` + manager.image}  className="off-image"   onError={(e) => {
+    e.target.src = '/assets/images/profile.jpg'; 
+  }}/>
              <h4>{manager.name}</h4>
              <p>{manager.email}</p>
                </div>
@@ -218,7 +222,9 @@ function ManagerDashboard() {
 
 
             <div className='manager-profile-display'>
-            <img src={`http://localhost:8081/images/` + manager.image} className="prodi-image" />
+            <img src={`http://localhost:8081/images/` + manager.image} className="prodi-image"   onError={(e) => {
+    e.target.src = '/assets/images/profile.jpg'; 
+  }}/>
            
             <h4>{manager.name}</h4>
             <p>{manager.email}</p>

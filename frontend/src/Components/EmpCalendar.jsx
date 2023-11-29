@@ -79,7 +79,9 @@ function EmpCalendar() {
               </div>
               <div className='dp-top-img'>
               <StatusIndicator isLoggedIn={isLoggedIn} />
-                <img src={`http://localhost:8081/images/` + employee.image} className="logoff-image" />
+                <img src={`http://localhost:8081/images/` + employee.image} className="logoff-image"   onError={(e) => {
+    e.target.src = '/assets/images/profile.jpg'; 
+  }} />
 
               </div>
               <div className='Nav-bar-header'>
@@ -125,7 +127,9 @@ function EmpCalendar() {
                   <div className="Log-off">
                     <img src="/assets/images/66847.png" alt="remove" className="cancel-togle" onClick={toggleUpdate} />
                     <div className="left-toggle">
-                      <img src={`http://localhost:8081/images/` + employee.image} className="off-image" />
+                      <img src={`http://localhost:8081/images/` + employee.image} className="off-image"    onError={(e) => {
+    e.target.src = '/assets/images/profile.jpg'; 
+  }}/>
                       <h4>{employee.name}</h4>
                       <p>{employee.email}</p>
                     </div>

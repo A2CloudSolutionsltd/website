@@ -64,7 +64,9 @@ function Profile() {
                     <h2>A2Cloud</h2>
                 </div>
                 <div className='dp-top-img'>
-                <img src={`http://localhost:8081/images/` + manager.image}  className="logoff-image"/>
+                <img src={`http://localhost:8081/images/` + manager.image}  className="logoff-image"   onError={(e) => {
+    e.target.src = '/assets/images/profile.jpg'; 
+  }}/>
  
                 </div>
                 <div className='Nav-bar-header'>
@@ -116,7 +118,9 @@ function Profile() {
              <div className="Log-off">
              <img src="/assets/images/66847.png" alt="remove" className="cancel-togle" onClick={toggleUpdate}  />
                <div className="left-toggle">
-               <img src={`http://localhost:8081/images/` + manager.image}  className="off-image"/>
+               <img src={`http://localhost:8081/images/` + manager.image}  className="off-image"   onError={(e) => {
+    e.target.src = '/assets/images/profile.jpg'; 
+  }}/>
              <h4>{manager.name}</h4>
              <p>{manager.email}</p>
                </div>
@@ -158,6 +162,9 @@ function Profile() {
                   src={`http://localhost:8081/images/` + manager.image}
                   alt="Upload Image"
                   className="pro-picbyeemployee"
+                  onError={(e) => {
+                    e.target.src = '/assets/images/profile.jpg'; 
+                  }}
                 />
               </div>
             </div>

@@ -3,7 +3,7 @@ import React from 'react'
 function Loader() {
   return (
     <div className='Loading-container'>
-    <img src='/assets/images/pre-loader.gif'/>
+    <img src='/assets/images/L.png' className='loader'/>
     </div>
   )
 }

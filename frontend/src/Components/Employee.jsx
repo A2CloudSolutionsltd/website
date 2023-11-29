@@ -161,7 +161,9 @@ function Employee() {
                     <h2>A2Cloud</h2>
                 </div>
                 <div className='dp-top-img'>
-                <img src={`http://localhost:8081/images/` + manager.image}  className="logoff-image"/>
+                <img src={`http://localhost:8081/images/` + manager.image}  className="logoff-image"   onError={(e) => {
+    e.target.src = '/assets/images/profile.jpg'; 
+  }}/>
  
                 </div>
                 <div className='Nav-bar-header'>
@@ -213,7 +215,9 @@ function Employee() {
              <div className="Log-off">
              <img src="/assets/images/66847.png" alt="remove" className="cancel-togle" onClick={toggleUpdate}  />
                <div className="left-toggle">
-               <img src={`http://localhost:8081/images/` + manager.image}  className="off-image"/>
+               <img src={`http://localhost:8081/images/` + manager.image}  className="off-image"   onError={(e) => {
+    e.target.src = '/assets/images/profile.jpg'; 
+  }}/>
              <h4>{manager.name}</h4>
              <p>{manager.email}</p>
                </div>
@@ -249,6 +253,9 @@ function Employee() {
                   src={`http://localhost:8081/images/` + employee.image}
                   alt="/assets/images/people-miss.png"
                   className="pro-picbyeemployee"
+                  onError={(e) => {
+                    e.target.src = '/assets/images/profile.jpg'; 
+                  }}
                 />
               </div>
             </div>
@@ -294,7 +301,7 @@ function Employee() {
             </div>
   <div className="handle-btn">
     <Link to={"/AssignTask/" + encodeURIComponent(employee.email)} ><button className="Assign">View/Assign Task</button> </Link>
-    <Link to={"/Edit-Employee/" + encodeURIComponent(employee.email)} ><button className="btnn">Edit</button> </Link>
+
     <button className="btnn1" onClick={(e)=> handleDelete(employee.email)}>Delete</button> 
     </div>
   </div>
@@ -312,6 +319,9 @@ function Employee() {
                           src={`http://localhost:8081/images/` + employee.image}
                           alt="Profile Missing"
                           className="listing-image"
+                          onError={(e) => {
+                            e.target.src = '/assets/images/profile.jpg'; 
+                          }}
                         />
                         
                         <h5>{employee.name}</h5>

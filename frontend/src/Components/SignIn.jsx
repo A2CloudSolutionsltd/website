@@ -2,8 +2,14 @@ import React, { useState, useEffect } from "react";
 import Loader from "./Loader";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import Aos from "aos";
+import "aos/dist/aos.css"
 
 function SignIn() {
+
+useEffect(()=>{
+  Aos.init();
+},[])
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   const [selectedOption, setSelectedOption] = useState("employee");
@@ -63,7 +69,7 @@ function SignIn() {
           <h2>Sign in,</h2>
           <div className="text-danger">{error && error}</div>
           <div className="Process-Left">
-            <form onSubmit={handleSubmit} className="Signup-form">
+            <form onSubmit={handleSubmit} className="Signup-form" data-aos="fade-down">
               <label className="signup-labelupdate">
                 Email:
                 <input
@@ -128,11 +134,12 @@ function SignIn() {
               </button>
             </form>
           </div>
-          <div className="Process-right">
+          <div className="Process-right" >
             <img
               src="assets/images/signup.png"
               className="signup-img"
               alt="inner file missing"
+              data-aos="fade-out"
             />
             <p className='image-bottom-para'>
               <Link to="/Register">Create Account !</Link>

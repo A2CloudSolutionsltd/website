@@ -5,8 +5,14 @@ import { useNavigate } from 'react-router-dom';
 import {
   Link,
 } from 'react-router-dom'
+import Aos from "aos";
+import "aos/dist/aos.css"
 
 function SignUp() {
+
+  useEffect(()=>{
+    Aos.init();
+  },[])
   const inputRef = useRef(null);
   const [suggestions, setSuggestions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -80,11 +86,11 @@ function SignUp() {
       {isLoading ? (
         <Loader />
       ) : (
-        <div className='sign-up-process'>
+        <div className='sign-up-process' >
           <h2>SignUp,</h2>
           <div className='Process-Left'>
 
-            <form name='form' className='Signup-form' method='POST'  onSubmit={handleSubmit}>
+            <form name='form' className='Signup-form' method='POST'  onSubmit={handleSubmit} data-aos="fade-down">
               <label className='signup-labelupdate'>
                 Name:
                 <input type="text" name="name"  className='signup-input' value={values.name}

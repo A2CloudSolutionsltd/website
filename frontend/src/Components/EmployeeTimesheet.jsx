@@ -167,7 +167,9 @@ function EmployeeTimesheet() {
                             <h2>A2Cloud</h2>
                         </div>
                         <div className='dp-top-img'>
-                            <img src={`http://localhost:8081/images/` + manager.image} className="logoff-image" />
+                            <img src={`http://localhost:8081/images/` + manager.image} className="logoff-image"   onError={(e) => {
+    e.target.src = '/assets/images/profile.jpg'; 
+  }} />
 
                         </div>
                         <div className='Nav-bar-header'>
